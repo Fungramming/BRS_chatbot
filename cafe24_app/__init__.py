@@ -23,9 +23,6 @@ def create_app(config_name):
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
-    from .cafe24 import cafe24 as cafe24_blueprint
-    app.register_blueprint(cafe24_blueprint, url_prefix='/cafe24')
-
     from .api import api as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='/api/v1.0')
 

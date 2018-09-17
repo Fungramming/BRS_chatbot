@@ -7,9 +7,11 @@ class Mall(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     mall_id = db.Column(db.String, unique=True)
     shop_no = db.Column(db.Integer, default=1)
+    is_multi_shop = db.Column(db.String, default=None)
+    lang = db.Column(db.String, default='ko_KR')
     access_token = db.Column(db.String, default=None)
+    refresh_token = db.Column(db.String, default=None)
     expires_at = db.Column(db.DateTime, default=None)
-    scripts = db.relationship('Script', backref='mall', lazy='dynamic')
 
     def __repr__(self):
         return '<Mall {}>'.format(self.mall_id)
@@ -21,14 +23,4 @@ def load_user(id):
 
 
 login.login_message = None
-
-
-class Script(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    script_id = db.Column(db.String, unique=True)
-    script_name = db.Column(db.String)
-    mall_id = db.Column(db.Integer, db.ForeignKey('mall.id'))
-
-    def __repr__(self):
-        return '<Script {}>'.format(self.script_name)
 

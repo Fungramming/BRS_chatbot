@@ -12,6 +12,7 @@ class Config:
     TOKEN_BASE_PATH = 'cafe24api.com/api/v2/oauth/token'
     CLIENT_ID = os.environ.get('CLIENT_ID')
     CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
+    REDIRECT_URL = os.environ.get('REDIRECT_URL')
     SCOPE = 'mall.write_application,mall.read_application,mall.read_product,mall.write_product,mall.read_design'
 
     @staticmethod

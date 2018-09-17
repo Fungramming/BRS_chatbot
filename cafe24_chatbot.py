@@ -2,8 +2,8 @@ import os
 from dotenv import load_dotenv
 
 from flask_migrate import Migrate, upgrade
-from app import create_app, db
-from app.models import Mall, Script
+from cafe24_app import create_app, db
+from cafe24_app.models import Mall
 
 
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
@@ -15,4 +15,4 @@ migrate = Migrate(app, db)
 
 @app.shell_context_processor
 def make_shell_context():
-    return dict(db=db, Mall=Mall, Script=Script)
+    return dict(db=db, Mall=Mall)
