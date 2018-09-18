@@ -42,9 +42,17 @@ def callback():
     #                             client_secret=current_app.config['CLIENT_SECRET'], authorization_response=request.url,
     #                             headers=custom_headers)
 
-    r = requests.post(token_url, data=data, headers=headers)
+    response = requests.post(token_url, data=data, headers=headers)
+    result = response.json()
 
-    print(r.json())
+    mall = Mall.query.filter_by(mall_id=mall_id).first()
+    mall.access_token = result.get('access_token')
+    mall.refresh_token = result.get('refresh_token')
+    mall.expires_at = datetime.strptime(result.get('expires_at'), '%Y-%m-%dT%H:%M:%S.%f')
+    mall.refresh_token_expires_at = datetime.strptime(result.get('refresh_token_expires_at'), '%Y-%m-%dT%H:%M:%S.%f')
+
+    db.session.add(mall)
+    db.session.commit()
 
     return 'hello'
 
@@ -91,3 +99,10 @@ def index():
     elif mall.expires_at < datetime.now():
         pass
         #리프레쉬 토큰으로 재발급
+
+    elif mall.refresh_token_expires_at < datetime.now():
+        pass
+        #띠용
+
+    else:
+        return 'hello'

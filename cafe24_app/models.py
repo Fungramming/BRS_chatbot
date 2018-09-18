@@ -12,6 +12,7 @@ class Mall(db.Model, UserMixin):
     access_token = db.Column(db.String, default=None)
     refresh_token = db.Column(db.String, default=None)
     expires_at = db.Column(db.DateTime, default=None)
+    refresh_token_expires_at = db.Column(db.DateTime, default=None)
 
     def __repr__(self):
         return '<Mall {}>'.format(self.mall_id)
