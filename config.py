@@ -10,10 +10,16 @@ class Config:
     OAUTHLIB_RELAX_TOKEN_SCOPE = 1
     AUTHORIZATION_BASE_PATH = 'cafe24api.com/api/v2/oauth/authorize'
     TOKEN_BASE_PATH = 'cafe24api.com/api/v2/oauth/token'
+    REQUEST_BASE_PATH = 'cafe24api.com/api/v2/admin'
     CLIENT_ID = os.environ.get('CLIENT_ID')
     CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
     REDIRECT_URL = os.environ.get('REDIRECT_URL')
-    SCOPE = 'mall.write_application,mall.read_application,mall.read_product,mall.write_product,mall.read_design'
+    SCOPE = 'mall.read_order,mall.write_order'+\
+            ',mall.read_customer,mall.write_customer'+\
+            ',mall.write_application,mall.read_application'+\
+            ',mall.read_product,mall.write_product'+\
+            ',mall.read_design,mall.write_design'+\
+            ',mall.read_store,mall.write_store'
 
     @staticmethod
     def init_app(app):

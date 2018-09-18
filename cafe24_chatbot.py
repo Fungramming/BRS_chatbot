@@ -1,6 +1,5 @@
 import os
 from dotenv import load_dotenv
-
 from flask_migrate import Migrate, upgrade
 from cafe24_app import create_app, db
 from cafe24_app.models import Mall
