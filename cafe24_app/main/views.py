@@ -1,13 +1,16 @@
 from . import main
 from .. import db
 from ..models import Mall
+from ..helper import random_str
 from fake_useragent import UserAgent
 from flask import render_template, redirect, url_for, jsonify, request, session, g,  current_app
 from flask_login import login_required, login_user, current_user, logout_user
 from requests_oauthlib.oauth2_session import OAuth2Session
 
 from datetime import datetime
-import requests, json, base64
+from urllib.parse import urlencode
+from base64 import b64encode
+import requests
 
 ua = UserAgent()
 
@@ -17,22 +20,31 @@ def Uturn():
 
 @main.route('/callback')
 def callback():
-    # code = request.args.get('code')
+    code = request.args.get('code')
+    state = request.args.get('state')
     mall_id = session['mall_id']
-    state = session['oauth_state']
+    oauth_state = session['oauth_state']
+    credential = current_app.config['CLIENT_ID'] + ':' + current_app.config['CLIENT_SECRET']
+    auth = b64encode(credential.encode()).decode()
+    print(state, oauth_state)
 
-    cafe_24 = OAuth2Session(current_app.config['CLIENT_ID'], state=state,
-                           redirect_uri=current_app.config['REDIRECT_URL'],
-                           scope=current_app.config['SCOPE'])
-    custom_headers = {'User-Agent': ua.random}
+    headers = {'Authorization': 'Basic' + ' ' + auth, 'Content-Type': 'application/x-www-form-urlencoded'}
+    data = {'grant_type': 'authorization_code', 'code': code, 'redirect_uri': current_app.config['REDIRECT_URL']}
+
+    # cafe_24 = OAuth2Session(current_app.config['CLIENT_ID'], state=state,
+    #                        redirect_uri=current_app.config['REDIRECT_URL'],
+    #                        scope=current_app.config['SCOPE'])
+    # custom_headers = {'User-Agent': ua.random}
 
     token_url = 'https://' + mall_id + '.' + current_app.config['TOKEN_BASE_PATH']
 
-    token = cafe_24.fetch_token(token_url, client_id=current_app.config['CLIENT_ID'],
-                                client_secret=current_app.config['CLIENT_SECRET'], authorization_response=request.url,
-                                headers=custom_headers)
+    # token = cafe_24.fetch_token(token_url, client_id=current_app.config['CLIENT_ID'],
+    #                             client_secret=current_app.config['CLIENT_SECRET'], authorization_response=request.url,
+    #                             headers=custom_headers)
 
-    print(token)
+    r = requests.post(token_url, data=data, headers=headers)
+
+    print(r.json())
 
     return 'hello'
 
@@ -61,9 +73,17 @@ def index():
 
         client_id = current_app.config['CLIENT_ID']
         scope = current_app.config['SCOPE']
+        redirect_url = current_app.config['REDIRECT_URL']
+        state = random_str(30, 1)
 
-        cafe_24 = OAuth2Session(client_id, redirect_uri='https://127.0.0.1:5000/callback', scope=scope)
-        authorization_url, state = cafe_24.authorization_url(authorization_base_url)
+        query = {'response_type': 'code', 'client_id': client_id, 'scope': scope,
+                 'redirect_uri': redirect_url, 'state': state}
+
+        authorization_url = authorization_base_url + '?' + urlencode(query)
+
+        # cafe_24 = OAuth2Session(client_id, redirect_uri='https://127.0.0.1:5000/callback', scope=scope)
+        # authorization_url, state = cafe_24.authorization_url(authorization_base_url)
+        print(state)
 
         session['oauth_state'] = state
         return redirect(authorization_url)
