@@ -1,13 +1,10 @@
 from . import main
 from .. import db
 from ..models import Mall
-from ..helper import random_str
+from .UrlHelper import *
 from fake_useragent import UserAgent
-from flask import render_template, redirect, url_for, jsonify, request, session, g, current_app
-
+from flask import  redirect, url_for, request, session, current_app
 from datetime import datetime
-from urllib.parse import urlencode
-from base64 import b64encode
 import requests
 
 ua = UserAgent()
@@ -26,10 +23,7 @@ def callback():
     auth = b64encode(credential.encode()).decode()
     print(state, oauth_state)  # 이걸 어떻게 활용하지?
 
-    headers = {'Authorization': 'Basic' + ' ' + auth, 'Content-Type': 'application/x-www-form-urlencoded'}
-    data = {'grant_type': 'authorization_code', 'code': code, 'redirect_uri': current_app.config['REDIRECT_URL']}
-
-    token_url = 'https://' + mall_id + '.' + current_app.config['TOKEN_BASE_PATH']
+    token_url, data, headers = callback_url(auth, code, mall_id)
 
     response = requests.post(token_url, data=data, headers=headers)
     result = response.json()
@@ -65,31 +59,14 @@ def index():
         mall = m
 
     if mall.access_token is None:
-
-        authorization_base_url = 'https://' + mall_id + '.' + current_app.config['AUTHORIZATION_BASE_PATH']
-
-        client_id = current_app.config['CLIENT_ID']
-        scope = current_app.config['SCOPE']
-        redirect_url = current_app.config['REDIRECT_URL']
-        state = random_str(30, 1)
-
-        query = {'response_type': 'code', 'client_id': client_id, 'scope': scope,
-                 'redirect_uri': redirect_url, 'state': state}
-
-        authorization_url = authorization_base_url + '?' + urlencode(query)
-
+        state, authorization_url = get_AccessToken_Url(mall_id)
         session['oauth_state'] = state
         return redirect(authorization_url)
 
     elif mall.expires_at < datetime.now():
-        credential = current_app.config['CLIENT_ID'] + ':' + current_app.config['CLIENT_SECRET']
-        auth = b64encode(credential.encode()).decode()
-        refresh_token = mall.refresh_token
 
-        headers = {'Authorization': 'Basic' + ' ' + auth, 'Content-Type': 'application/x-www-form-urlencoded'}
-        data = {'grant_type': 'refresh_token', 'refresh_token': refresh_token}
-
-        token_url = 'https://' + mall_id + '.' + current_app.config['TOKEN_BASE_PATH']
+        m = Mall.query.filter_by(mall_id=mall_id).filter_by(shop_no=shop_no).first()
+        token_url, data, headers = reissue_AcessToken_Url(m.refresh_token, mall_id)
 
         response = requests.post(token_url, data=data, headers=headers)
         result = response.json()
