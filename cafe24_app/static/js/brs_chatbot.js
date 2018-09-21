@@ -9,32 +9,32 @@ var app = new Vue({
                 bot: true,
                 minute_time: new Date(new Date().setSeconds(0)),
                 chats: [
-                    { time: new Date(), message: "Alright great. Let's get you setup with a demo of BRS Chatbot." },
-                    { time: new Date(), message: "What are you interested in using BRS Chatbot for?" }
-                ]
-            },
-            {
-                bot: false,
-                minute_time: new Date(new Date().setSeconds(0)),
-                chats: [
-                    { time: new Date(), message: "Support" }
-                ]
-            },
-            {
-                bot: true,
-                minute_time: new Date(new Date().setSeconds(0)),
-                chats: [
-                    { time: new Date(), message: "OK got it." },
-                    { time: new Date(), message: "What kinds of support features are you looking for?" }
-                ]
-            },
-            {
-                bot: false,
-                minute_time: new Date(new Date().setSeconds(0)),
-                chats: [
-                    { time: new Date(), message: "BRS Chatbot hosted help docs BRS Chatbot hosted help docs" }
+                    { time: new Date(), message: "안녕하세요 브루스 챗봇입니다.^^" },
+                    { time: new Date(), message: "현재는 기본적인 챗팅 기능만 있어요 마음껏 테스트해보세요." }
                 ]
             }
+            // {
+            //     bot: false,
+            //     minute_time: new Date(new Date().setSeconds(0)),
+            //     chats: [
+            //         { time: new Date(), message: "Support" }
+            //     ]
+            // },
+            // {
+            //     bot: true,
+            //     minute_time: new Date(new Date().setSeconds(0)),
+            //     chats: [
+            //         { time: new Date(), message: "OK got it." },
+            //         { time: new Date(), message: "What kinds of support features are you looking for?" }
+            //     ]
+            // },
+            // {
+            //     bot: false,
+            //     minute_time: new Date(new Date().setSeconds(0)),
+            //     chats: [
+            //         { time: new Date(), message: "BRS Chatbot hosted help docs BRS Chatbot hosted help docs" }
+            //     ]
+            // }
         ]
     },
     methods: {
@@ -45,6 +45,15 @@ var app = new Vue({
         hide: function() {
             this.chatbot = false;
             this.brs_style = 'width: 76px !important; height: 76px !important; bottom: 24px; right: 24px;'
+        },
+        home: function() {
+            var now = new Date();
+            var msg = '아직 홈 기능은 없어요ㅠㅠ'
+            var chat = { time: new Date(now.valueOf()), message: msg };
+
+            var new_speaker = { bot: true, minute_time: new Date(now.setSeconds(0)), chats: [] };
+            new_speaker.chats.push(chat);
+            this.conversation.push(new_speaker);
         },
         inputEvent: function(msg) {
             var now = new Date();
@@ -62,9 +71,16 @@ var app = new Vue({
             } else {
                 last_speaker.chats.push(chat);
             }
-
-            // var chat = { time: '', message: msg };
-            // this.conversation[this.conversation.length - 1].chats.push(chat);
+        },
+        scrollToEnd: function() {
+            var chats_wrapper = document.querySelector('.brs-messages')
+            chats_wrapper.scrollTop = chats_wrapper.scrollHeight;
         }
+    },
+    mounted: function() {
+        this.scrollToEnd();
+    },
+    updated: function() {
+        this.scrollToEnd();
     }
 })

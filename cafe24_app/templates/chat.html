@@ -19,6 +19,7 @@
         <div class="brs-chats">
             <div v-for="chat in chats" class="brs-chat brs-user" :title="chat.time" style="color: rgb(255, 255, 255); background-color: rgb(10, 91, 255);">{{chat.message}}</div>
         </div>
+        <div class="brs-chat-time">{{minute_time_str}}</div>
     </div>
 </div>
 </template>
@@ -52,8 +53,9 @@
 <div class="brs-messages-footer">
     <div class="brs-composer">
         <div class="brs-flex-column">
-            <div tabindex="-1" class="brs-input-wrapper">
-                <textarea v-model="input_message" @keydown="inputHandler" tabindex="1000" placeholder="Leave a message for BRS Chatbot" class="brs-input" style="height: 35px;"></textarea>
+            <div class="brs-input-wrapper">
+                <!-- placeholder에 뭐라고 쓰면 좋을까? -->
+                <textarea v-model="input_message" @keyup="resize" @keydown="inputHandler" placeholder="Leave a message for BRS Chatbot" class="brs-input" style="height: 35px; overflow-y: hidden;"></textarea>
             </div>
         </div>
     </div>
@@ -66,15 +68,15 @@
     <div id="brs" :style="brs_style">
         <div class="brs-chatbot-container">
 
-            <!-- chatbot_close 시작 -->
+            <!-- chatbot close 시작 -->
             <div v-if="!chatbot" id="brs-chatbot-close" class="brs-chatbot-close">
                 <button type="button" @click="show()" style="background-color: rgb(10, 91, 255); color: rgb(255, 255, 255);">
-                    <i class="brs-font brs-font-comment"></i>
+                    <i class="fas fa-comment-alt"></i>
                 </button>
             </div>
-            <!-- chatbot_close 끝 -->
+            <!-- chatbot close 끝 -->
 
-            <!-- chatbot_open 시작 -->
+            <!-- chatbot open 시작 -->
             <div v-else id="brs-chatbot-open" class="brs-chatbot-open">
                 <div class="brs-messanger-content">
                     <div class="brs-messanger-header" style="background-color: rgb(10, 91, 255); color: rgb(255, 255, 255);">
@@ -83,15 +85,15 @@
                             />
                         </div>
                         <div class="brs-chatbot-name">BRS Chatbot</div>
-                        <button><i class="brs-font brs-font-home"></i></button>
-                        <button type="button" @click="hide()"><i class="brs-font brs-font-times"></i></button>
+                        <button type="button" @click="home()"><i class="fas fa-home"></i></button>
+                        <button type="button" @click="hide()"><i class="fas fa-times"></i></button>
                     </div>
                     <div class="brs-conversation">
                         <div class="brs-messages" style="background-color: rgb(255, 255, 255);">
                             <div class="brs-messages-content-wrapper">
-                                <div v-for="speaker in conversation">
-                                    <bot-chat v-if="speaker.bot" :messages="speaker.chats"></bot-chat>
-                                    <user-chat v-else :messages="speaker.chats"></user-chat>
+                                <div v-for="speaker in conversation" style="position: relative;">
+                                    <bot-chat v-if="speaker.bot" :messages="speaker.chats" :minute="speaker.minute_time"></bot-chat>
+                                    <user-chat v-else :messages="speaker.chats" :minute="speaker.minute_time"></user-chat>
                                 </div>
                             </div>
                         </div>
@@ -99,7 +101,7 @@
                     </div>
                 </div>
             </div>
-            <!-- chatbot_open 끝 -->
+            <!-- chatbot open 끝 -->
         </div>
     </div>
     <script src="../static/js/brs_chatbot.js" type="text/javascript"></script>
