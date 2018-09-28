@@ -1,5 +1,6 @@
-from flask import request, app, current_app
-from datetime import datetime, date
+# 검색 기간 처리
+
+from datetime import datetime
 from dateutil.relativedelta import *
 
 

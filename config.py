@@ -14,13 +14,12 @@ class Config:
     CLIENT_ID = os.environ.get('CLIENT_ID')
     CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
     REDIRECT_URL = os.environ.get('REDIRECT_URL')
-    SCOPE = 'mall.read_order,mall.write_order'+\
-            ',mall.read_customer,mall.write_customer'+\
-            ',mall.write_application,mall.read_application'+\
-            ',mall.read_product,mall.write_product'+\
+    SCOPE = 'mall.write_application,mall.read_application'+\
+            ',mall.read_customer,mall.write_customer'+ \
             ',mall.read_design,mall.write_design'+\
+            ',mall.read_order,mall.write_order'+\
+            ',mall.read_product,mall.write_product'+\
             ',mall.read_store,mall.write_store'
-
     @staticmethod
     def init_app(app):
         pass

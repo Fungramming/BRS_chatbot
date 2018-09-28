@@ -1,3 +1,5 @@
+# 배송 조회를 위한 API
+
 import requests
 from . import api
 from .AceessTokenHelper import *
@@ -77,26 +79,12 @@ def test():
     mall_id = request.args.get('mall_id')
     shop_no = request.args.get('shop_no')
 
-    m = Mall.query.filter_by(mall_id=mall_id).filter_by(shop_no=shop_no).first()
+    MallId, AccessToken = Confirm_access_expiration(mall_id, shop_no)
 
-    request_url = 'https://' + m.mall_id + '.' + current_app.config['REQUEST_BASE_PATH']+'/products'
-    headers = {'Authorization': 'Bearer'+ ' ' + m.access_token, 'Content-Type': 'application/json'}
+    request_url = 'https://' + MallId + '.' + current_app.config['REQUEST_BASE_PATH']+'/products'
+    headers = {'Authorization': 'Bearer'+ ' ' + AccessToken, 'Content-Type': 'application/json'}
 
     response = requests.get(request_url, headers=headers)
     result = response.json()
 
-    products=result['products']
-    products_delivery_complete = list()
-    products_delivery_Notcomplete = list()
-
-    for p in products:
-        a=p['product_condition']
-        if a == 'R':
-            products_delivery_complete.append(p)
-        else:
-            products_delivery_Notcomplete.append(p)
-
-    return jsonify({
-        'products_delivery_complete' : products_delivery_complete,
-        'products_delivery_Notcomplete' : products_delivery_Notcomplete
-    })
+    return jsonify(result)

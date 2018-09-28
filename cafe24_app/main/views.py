@@ -25,7 +25,7 @@ def callback():
 
     token_url, data, headers = callback_url(auth, code, mall_id)
 
-    response = requests.post(token_url, data=data, headers=headers)
+    response = requests.post(token_url, headers=headers, data=data)
     result = response.json()
 
     mall = Mall.query.filter_by(mall_id=mall_id).first()
