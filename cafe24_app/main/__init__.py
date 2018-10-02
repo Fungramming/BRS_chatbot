@@ -2,4 +2,4 @@ from flask import Blueprint
 
 main = Blueprint('main', __name__)
 
-from . import views, UrlHelper
+from . import views, UrlHelper, ManageScripttags

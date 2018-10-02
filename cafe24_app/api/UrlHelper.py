@@ -3,10 +3,10 @@
 from .DateHelper import orders_date_range
 from flask import current_app
 from fake_useragent import UserAgent
-import os
-from ..helper import random_str
-from urllib.parse import urlencode
-from base64 import b64encode
+# import os
+# from ..helper import random_str
+# from urllib.parse import urlencode
+# from base64 import b64encode
 
 ua = UserAgent()
 
@@ -46,54 +46,3 @@ def get_products_request_url(MallId, AccessToken):
                'User-Agent': ua.random}
 
     return  request_url, headers
-
-def post_scripttags_url(MallId, AccessToken, shop_no, src):
-    request_url = 'https://' + MallId + '.' + current_app.config['REQUEST_BASE_PATH'] + '/scripttags'
-    headers = {'Authorization': 'Bearer' + ' ' + AccessToken, 'Content-Type': 'application/json',
-               'User-Agent': ua.random}
-    data = {
-        "shop_no": shop_no,
-        "request": {
-            "src": src,
-            "display_location": [
-                "all"
-            ]
-        }
-    }
-    return  request_url, headers, data
-
-def get_specific_scripttags_url(MallId, AccessToken, script_no):
-    request_url = 'https://' + MallId + '.' + current_app.config['REQUEST_BASE_PATH'] + '/scripttags/' + str(script_no)
-    headers = {'Authorization': 'Bearer' + ' ' + AccessToken, 'Content-Type': 'application/json',
-               'User-Agent': ua.random}
-
-    return  request_url, headers
-
-def get_scripttags_url(MallId, AccessToken):
-    request_url = 'https://' + MallId + '.' + current_app.config['REQUEST_BASE_PATH'] + '/scripttags/'
-    headers = {'Authorization': 'Bearer' + ' ' + AccessToken, 'Content-Type': 'application/json',
-               'User-Agent': ua.random}
-
-    return  request_url, headers
-
-def delete_scripttags_url(MallId, AccessToken, script_no):
-    request_url = 'https://' + MallId + '.' + current_app.config['REQUEST_BASE_PATH'] + '/scripttags/'+ str(script_no)
-    headers = {'Authorization': 'Bearer' + ' ' + AccessToken, 'Content-Type': 'application/json',
-               'User-Agent': ua.random}
-    return request_url, headers
-
-def update_scripttags_url(MallId, AccessToken, script_no, shop_no, src):
-    request_url = 'https://' + MallId + '.' + current_app.config['REQUEST_BASE_PATH'] + '/scripttags/'+ str(script_no)
-    headers = {'Authorization': 'Bearer' + ' ' + AccessToken, 'Content-Type': 'application/json',
-               'User-Agent': ua.random}
-    json = {
-        "shop_no": shop_no,
-        "request": {
-            "src": src,
-            "display_location": [
-                "PRODUCT_LIST"
-            ]
-        }
-    }
-
-    return request_url, headers, json

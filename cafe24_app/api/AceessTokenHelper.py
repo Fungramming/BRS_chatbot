@@ -1,8 +1,8 @@
 # 회원이 채팅을 사용할 때 AceessToken이 만료될경우 재발급을 위한 과정
 
-from ..models import Mall
+from cafe24_app.models import Mall
 from datetime import datetime
-from ..main.views import index
+from cafe24_app.main.views import index
 
 
 def Confirm_access_expiration(mall_id, shop_no):

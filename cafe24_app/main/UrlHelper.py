@@ -47,3 +47,54 @@ def callback_url(auth, code, mall_id):
     token_url = 'https://' + mall_id + '.' + current_app.config['TOKEN_BASE_PATH']
 
     return token_url, data, headers
+
+def post_scripttags_url(MallId, AccessToken, shop_no, src):
+    request_url = 'https://' + MallId + '.' + current_app.config['REQUEST_BASE_PATH'] + '/scripttags'
+    headers = {'Authorization': 'Bearer' + ' ' + AccessToken, 'Content-Type': 'application/json',
+               'User-Agent': ua.random}
+    data = {
+        "shop_no": shop_no,
+        "request": {
+            "src": src,
+            "display_location": [
+                "all"
+            ]
+        }
+    }
+    return  request_url, headers, data
+
+def get_specific_scripttags_url(MallId, AccessToken, script_no):
+    request_url = 'https://' + MallId + '.' + current_app.config['REQUEST_BASE_PATH'] + '/scripttags/' + str(script_no)
+    headers = {'Authorization': 'Bearer' + ' ' + AccessToken, 'Content-Type': 'application/json',
+               'User-Agent': ua.random}
+
+    return  request_url, headers
+
+def get_scripttags_url(MallId, AccessToken):
+    request_url = 'https://' + MallId + '.' + current_app.config['REQUEST_BASE_PATH'] + '/scripttags/'
+    headers = {'Authorization': 'Bearer' + ' ' + AccessToken, 'Content-Type': 'application/json',
+               'User-Agent': ua.random}
+
+    return  request_url, headers
+
+def delete_scripttags_url(MallId, AccessToken, script_no):
+    request_url = 'https://' + MallId + '.' + current_app.config['REQUEST_BASE_PATH'] + '/scripttags/'+ str(script_no)
+    headers = {'Authorization': 'Bearer' + ' ' + AccessToken, 'Content-Type': 'application/json',
+               'User-Agent': ua.random}
+    return request_url, headers
+
+def update_scripttags_url(MallId, AccessToken, script_no, shop_no, src):
+    request_url = 'https://' + MallId + '.' + current_app.config['REQUEST_BASE_PATH'] + '/scripttags/'+ str(script_no)
+    headers = {'Authorization': 'Bearer' + ' ' + AccessToken, 'Content-Type': 'application/json',
+               'User-Agent': ua.random}
+    json = {
+        "shop_no": shop_no,
+        "request": {
+            "src": src,
+            "display_location": [
+                "all"
+            ]
+        }
+    }
+
+    return request_url, headers, json

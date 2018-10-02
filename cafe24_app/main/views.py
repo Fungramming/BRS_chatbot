@@ -1,11 +1,12 @@
 from . import main
 from .. import db
-from ..models import Mall
+from ..models import Mall, Scripttags
 from .UrlHelper import *
 from fake_useragent import UserAgent
 from flask import  redirect, url_for, request, session, current_app
 from datetime import datetime
 import requests
+import os
 
 ua = UserAgent()
 
@@ -16,12 +17,13 @@ def Uturn():
 @main.route('/callback')
 def callback():
     code = request.args.get('code')
-    state = request.args.get('state')
     mall_id = session['mall_id']
-    oauth_state = session['oauth_state']
     credential = current_app.config['CLIENT_ID'] + ':' + current_app.config['CLIENT_SECRET']
     auth = b64encode(credential.encode()).decode()
-    print(state, oauth_state)  # 이걸 어떻게 활용하지?
+
+    state = request.args.get('state')
+    oauth_state = session['oauth_state']
+    # print(state, oauth_state)  # 이걸 어떻게 활용하지?
 
     token_url, data, headers = callback_url(auth, code, mall_id)
 
@@ -37,7 +39,8 @@ def callback():
     db.session.add(mall)
     db.session.commit()
 
-    return 'hello'
+    create_src_url = "/creatscripttags/?mall_id=" + mall.mall_id + "&shop_no=" + str(mall.shop_no)
+    return redirect(create_src_url)
 
 @main.route('/')
 def index():
@@ -63,6 +66,20 @@ def index():
         session['oauth_state'] = state
         return redirect(authorization_url)
 
+    elif mall.refresh_token_expires_at < datetime.now():
+
+        mall.access_token=None
+        mall.refresh_token=None
+        mall.expires_at=None
+        mall.refresh_token_expires_at=None
+
+        db.session.add(mall)
+        db.session.commit()
+
+        state, authorization_url = get_AccessToken_Url(mall_id)
+        session['oauth_state'] = state
+        return redirect(authorization_url)
+
     elif mall.expires_at < datetime.now():
 
         m = Mall.query.filter_by(mall_id=mall_id).filter_by(shop_no=shop_no).first()
@@ -81,10 +98,6 @@ def index():
         db.session.commit()
 
         return 'hello'
-
-    elif mall.refresh_token_expires_at < datetime.now():
-        pass
-        #띠용
 
     else:
         return 'hello'

@@ -2,9 +2,8 @@
 
 import requests
 from . import api
-from .AceessTokenHelper import *
+from cafe24_app.api.AceessTokenHelper import *
 from .UrlHelper import *
-from ..models import Mall
 from flask import request, jsonify, current_app
 
 
