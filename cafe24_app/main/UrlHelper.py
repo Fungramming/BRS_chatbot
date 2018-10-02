@@ -56,9 +56,7 @@ def post_scripttags_url(MallId, AccessToken, shop_no, src):
         "shop_no": shop_no,
         "request": {
             "src": src,
-            "display_location": [
-                "all"
-            ]
+            "display_location": current_app.config['DISPLAY_LOCATION_LIST']
         }
     }
     return  request_url, headers, data
@@ -91,9 +89,7 @@ def update_scripttags_url(MallId, AccessToken, script_no, shop_no, src):
         "shop_no": shop_no,
         "request": {
             "src": src,
-            "display_location": [
-                "all"
-            ]
+            "display_location": current_app.config['DISPLAY_LOCATION_LIST']
         }
     }
 

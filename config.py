@@ -21,6 +21,7 @@ class Config:
             ',mall.read_order,mall.write_order'+\
             ',mall.read_product,mall.write_product'+\
             ',mall.read_store,mall.write_store'
+    DISPLAY_LOCATION_LIST = ["all"]
     @staticmethod
     def init_app(app):
         pass
