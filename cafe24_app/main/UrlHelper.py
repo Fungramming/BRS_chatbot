@@ -49,6 +49,7 @@ def callback_url(auth, code, mall_id):
     return token_url, data, headers
 
 def post_scripttags_url(MallId, AccessToken, shop_no, src):
+
     request_url = 'https://' + MallId + '.' + current_app.config['REQUEST_BASE_PATH'] + '/scripttags'
     headers = {'Authorization': 'Bearer' + ' ' + AccessToken, 'Content-Type': 'application/json',
                'User-Agent': ua.random}
@@ -56,9 +57,10 @@ def post_scripttags_url(MallId, AccessToken, shop_no, src):
         "shop_no": shop_no,
         "request": {
             "src": src,
-            "display_location": current_app.config['DISPLAY_LOCATION_LIST']
+            "display_location": current_app.config['DEFAULT_DISPLAY_LOCATION_LIST']
         }
     }
+
     return  request_url, headers, data
 
 def get_specific_scripttags_url(MallId, AccessToken, script_no):
@@ -81,7 +83,12 @@ def delete_scripttags_url(MallId, AccessToken, script_no):
                'User-Agent': ua.random}
     return request_url, headers
 
-def update_scripttags_url(MallId, AccessToken, script_no, shop_no, src):
+def update_scripttags_url(MallId, AccessToken, script_no, shop_no, src, display_code):
+    if display_code is None:
+        display_location_list = current_app.config['DEFAULT_DISPLAY_LOCATION_LIST']
+    else:
+        display_location_list = display_code.split(',')
+
     request_url = 'https://' + MallId + '.' + current_app.config['REQUEST_BASE_PATH'] + '/scripttags/'+ str(script_no)
     headers = {'Authorization': 'Bearer' + ' ' + AccessToken, 'Content-Type': 'application/json',
                'User-Agent': ua.random}
@@ -89,7 +96,7 @@ def update_scripttags_url(MallId, AccessToken, script_no, shop_no, src):
         "shop_no": shop_no,
         "request": {
             "src": src,
-            "display_location": current_app.config['DISPLAY_LOCATION_LIST']
+            "display_location": display_location_list
         }
     }
 

@@ -14,14 +14,15 @@ class Config:
     CLIENT_ID = os.environ.get('CLIENT_ID')
     CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
     REDIRECT_URL = os.environ.get('SERVER_URL')+'callback'
-    SRC_URL = os.environ.get('SRC_URL')
+    SRC_BASE_URL = os.environ.get('SRC_BASE_URL')
+    SRC_DEFUALT_FILE = os.environ.get('SRC_DEFUALT_FILE')
     SCOPE = 'mall.write_application,mall.read_application'+\
             ',mall.read_customer,mall.write_customer'+ \
             ',mall.read_design,mall.write_design'+\
             ',mall.read_order,mall.write_order'+\
             ',mall.read_product,mall.write_product'+\
             ',mall.read_store,mall.write_store'
-    DISPLAY_LOCATION_LIST = ["all"]
+    DEFAULT_DISPLAY_LOCATION_LIST = ["all"]
     @staticmethod
     def init_app(app):
         pass
