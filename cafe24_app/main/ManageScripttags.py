@@ -104,7 +104,7 @@ def Update_Scripttags():
     st.script_no = scripttag['script_no']
     st.src = scripttag['src']
     st.updated_date = datetime.strptime(scripttag['updated_date'].split('+')[0], '%Y-%m-%dT%H:%M:%S')
-    st.JoinedLocationCode = display_code
+    st.JoinedLocationCode = display_code or 'all'
 
     db.session.add(st)
     db.session.commit()

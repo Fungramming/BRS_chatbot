@@ -26,10 +26,10 @@ def load_user(id):
 class Scripttags(db.Model):
     __tablename__ = 'scripttags'
     id = db.Column(db.Integer, primary_key=True)
-    # mall_id = db.Column(db.ForeignKey('mall.mall_id'), nullable=False)
-    # shop_no = db.Column(db.ForeignKey('mall.shop_no'), default=1)
-    mall_id = db.Column(db.String, nullable=False)
-    shop_no = db.Column(db.Integer, default=1)
+    mall_id = db.Column(db.ForeignKey('mall.mall_id'), nullable=False)
+    shop_no = db.Column(db.ForeignKey('mall.shop_no'), default=1)
+    # mall_id = db.Column(db.String, nullable=False)
+    # shop_no = db.Column(db.Integer, default=1)
     script_no = db.Column(db.Integer, unique=True)
     client_id = db.Column(db.String, nullable=False)
     src = db.Column(db.String, nullable=False)
@@ -37,8 +37,8 @@ class Scripttags(db.Model):
     updated_date = db.Column(db.DateTime, default=None)
     JoinedLocationCode = db.Column(db.String, default='all')
 
-    # mall = db.relationship('Mall', primaryjoin='Scripttags.mall_id == Mall.mall_id', backref='mall_scripttags')
-    # mall1 = db.relationship('Mall', primaryjoin='Scripttags.shop_no == Mall.shop_no', backref='mall_scripttags_0')
+    mall = db.relationship('Mall', primaryjoin='Scripttags.mall_id == Mall.mall_id', backref='mall_scripttags')
+    mall1 = db.relationship('Mall', primaryjoin='Scripttags.shop_no == Mall.shop_no', backref='mall_scripttags_0')
 
     def __repr__(self):
         return '<Scripttags {}>'.format(self.script_no)
