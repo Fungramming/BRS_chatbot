@@ -17,28 +17,18 @@ def get_orders():
     shop_no = Scripttags.query.filter_by(mall_id=mall_id).filter_by(script_no=script_no).first().shop_no
 
     MallId, AccessToken = Confirm_access_expiration(mall_id, shop_no)
-
     request_url, headers = get_order_request_url(MallId, member_id, AccessToken)
 
-    response = requests.get(request_url, headers=headers)
-    result = response.json()
+    order_status = {'입금전': 'N00', '상품 준비중': 'N10', '배송 준비중': 'N20', '배송 대기': 'N21', '배송 보류': 'N22', '배송 중': 'N30', '배송 완료': 'N40'}
+    orders = {'입금전': None, '상품 준비중': None, '배송 준비중': None, '배송 대기': None, '배송 보류': None, '배송 중': None, '배송 완료': None}
 
-    orders = result['orders']
-    delivery_complete = list()
-    delivery_Notcomplete = list()
+    for key in order_status.keys():
+        request_url_key = request_url + '&order_status=' + order_status[key]
+        response = requests.get(request_url_key, headers=headers)
+        result = response.json()
+        orders[key] = result['orders']
 
-    for order in orders:
-        shipping_status=order['shipping_status']
-        if shipping_status == 'T':
-            delivery_complete.append(order)
-        else:
-            delivery_Notcomplete.append(order)
-
-
-    return jsonify({
-        'delivery_complete': delivery_complete,
-        'delivery_Notcomplete': delivery_Notcomplete
-    })
+    return jsonify(orders)
 
 # 회원의 특정 상품의 배송 상태를 조회하기 위한 API
 @api.route('/tracking/item/')

@@ -47,7 +47,7 @@ def Create_Scripttags():
     result = response.json()
 
     scripttag = result['scripttag']
-    src = current_app.config['SRC_BASE_URL'] + mall_id + '_' + scripttag['script_no'] + '.js'
+    # src = current_app.config['SRC_BASE_URL'] + mall_id + '_' + scripttag['script_no'] + '.js'
     st = Scripttags(mall_id=mall_id,
                     shop_no=scripttag['shop_no'],
                     script_no=scripttag['script_no'],

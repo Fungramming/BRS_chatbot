@@ -1,5 +1,4 @@
 from random import randint, choice
-from .fakehelper import generate_status
 from datetime import datetime, timedelta
 from . import api
 from cafe24_app import db
@@ -23,8 +22,8 @@ def create_Fake_Data():
     db.session.commit()
 
     # 변수선언
-    mall_id = request.args.get('mall_id')
-    shop_no = request.args.get('shop_no')
+    mall_id = 'blackrubydev'
+    shop_no = '1'
     on = int(request.args.get('order_num'))
     phonelist = list()
     faketime = (datetime.today() - timedelta(days=3)).strftime('%Y%m%d')
@@ -106,7 +105,6 @@ def create_Fake_Data():
 
         # 구매 여부 및 상태 생성
         order_status = choice(['N00', 'N10', 'N20', 'N21', 'N22', 'N30', 'N40'])
-        status = generate_status(order_status, od)
 
         fo= FakeOrders(shop_no = shop_no,
                        order_id = order_id,
@@ -115,12 +113,8 @@ def create_Fake_Data():
                        member_id = customer.member_id,
                        member_authentication= customer.member_authentication,
                        customer_group_no_when_ordering = customer.group_no,
-                       paid = status['paid'],
-                       order_date = status['order_date'],
-                       payment_date = status['payment_date'],
-                       cancel_date = status['cancel_date'],
-                       shipping_status = status['shipping_status'],
-                       )
+                       order_status = order_status
+        )
 
         range_item = randint(2,4)
         for i in range(1,range_item):
@@ -137,7 +131,7 @@ def create_Fake_Data():
                                  quantity = randint(1,3),
                                  tracking_no = status['tracking_no'],
                                  shipping_code = status['shipping_code'],
-                                 order_status = status['order_status'],
+                                 order_status = order_status,
                                  status_code = status['status_code'],
                                  ordered_date = status['order_date'],
                                  shipped_date = status['shipped_date'],
