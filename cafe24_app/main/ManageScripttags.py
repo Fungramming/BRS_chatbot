@@ -1,9 +1,8 @@
 import requests
-import random
 from . import main
 from ..api.AceessTokenHelper import *
 from .UrlHelper import post_scripttags_url, get_specific_scripttags_url, delete_scripttags_url, get_scripttags_url, update_scripttags_url
-from ..models import Scripttags
+from ..models import Scripttags, Mall
 from flask import request, jsonify, current_app, redirect
 from cafe24_app import db
 from datetime import datetime
@@ -32,7 +31,8 @@ def Create_Scripttags():
 
 
     # local script tage 초기화 과정
-    st = Scripttags.query.filter_by(mall_id=mall_id).filter_by(shop_no=shop_no).all()
+    m = Mall.query.filter_by(mall_id=mall_id).filter_by(shop_no=shop_no).first()
+    st = Scripttags.query.filter_by(mall_idx=m.idx).all()
 
     if st is not None:
         for ss in st:
@@ -47,9 +47,8 @@ def Create_Scripttags():
     result = response.json()
 
     scripttag = result['scripttag']
-    # src = current_app.config['SRC_BASE_URL'] + mall_id + '_' + scripttag['script_no'] + '.js'
-    st = Scripttags(mall_id=mall_id,
-                    shop_no=scripttag['shop_no'],
+    src = current_app.config['SRC_BASE_URL'] + mall_id + '_' + scripttag['script_no'] + '.js'
+    st = Scripttags(mall_idx=m.idx,
                     script_no=scripttag['script_no'],
                     client_id=scripttag['client_id'],
                     src=src,
@@ -77,15 +76,18 @@ def Update_Scripttags():
 
     MallId, AccessToken = Confirm_access_expiration(mall_id, shop_no)
 
-    scripttag = Scripttags.query.filter_by(mall_id=mall_id).filter_by(shop_no=shop_no).first()
+    m = Mall.query.filter_by(mall_id=mall_id).filter_by(shop_no=shop_no).first()
+    st = Scripttags.query.filter_by(mall_idx=m.idx).first()
 
-    if scripttag == None:
-        mall = Mall.query.filter_by(mall_id=mall_id).filter_by(shop_no=shop_no).first()
-        create_src_url = "/creatscripttags/?mall_id=" + mall.mall_id + "&shop_no=" + str(mall.shop_no) +'&display_code=' + display_code
+    if st == None:
+        if display_code == None:
+            create_src_url = "/creatscripttags/?mall_id=" + m.mall_id + "&shop_no=" + str(m.shop_no)
+        else:
+            create_src_url = "/creatscripttags/?mall_id=" + m.mall_id + "&shop_no=" + str(m.shop_no) +'&display_code=' + display_code
         return redirect(create_src_url)
     else:
-        script_no = scripttag.script_no
-        src = scripttag.src
+        script_no = st.script_no
+        src = st.src
 
     request_url, headers, json = update_scripttags_url(MallId, AccessToken, script_no, shop_no, src, display_code)
 
@@ -93,13 +95,10 @@ def Update_Scripttags():
     result = response.json()
 
     if 'error' in result:
-        mall = Mall.query.filter_by(mall_id=mall_id).filter_by(shop_no=shop_no).first()
-        create_src_url = "/creatscripttags/?mall_id=" + mall.mall_id + "&shop_no=" + str(mall.shop_no) +'&display_code=' + display_code
+        create_src_url = "/creatscripttags/?mall_id=" + m.mall_id + "&shop_no=" + str(m.shop_no) +'&display_code=' + display_code
         return redirect(create_src_url)
 
     scripttag = result['scripttag']
-
-    st = Scripttags.query.filter_by(mall_id=mall_id).filter_by(shop_no=shop_no).first()
 
     st.script_no = scripttag['script_no']
     st.src = scripttag['src']
@@ -120,7 +119,8 @@ def Delete_Scripttags():
 
     MallId, AccessToken = Confirm_access_expiration(mall_id, shop_no)
 
-    scripttag = Scripttags.query.filter_by(mall_id=mall_id).filter_by(shop_no=shop_no).first()
+    m = Mall.query.filter_by(mall_id=mall_id).filter_by(shop_no=shop_no).first()
+    scripttag = Scripttags.query.filter_by(mall_idx=m.idx).first()
 
     if scripttag is not None:
         script_no = scripttag.script_no
@@ -168,7 +168,8 @@ def Get_Scripttags():
 
     MallId, AccessToken = Confirm_access_expiration(mall_id, shop_no)
 
-    scripttag = Scripttags.query.filter_by(mall_id=mall_id).filter_by(shop_no=shop_no).first()
+    m = Mall.query.filter_by(mall_id=mall_id).filter_by(shop_no=shop_no).first()
+    scripttag = Scripttags.query.filter_by(mall_idx=m.idx).first()
 
     if scripttag == None:
         request_url, headers = get_scripttags_url(MallId, AccessToken)
@@ -187,7 +188,7 @@ def Get_Scripttags():
             r = response.json()
 
             scripttag = r['scripttag']
-            st = Scripttags(mall_id=mall_id,
+            st = Scripttags(mall_idx=m.idx,
                             shop_no=scripttag['shop_no'],
                             script_no=scripttag['script_no'],
                             client_id=scripttag['client_id'],
