@@ -3,7 +3,7 @@ from .. import db
 from ..models import Mall, Scripttags
 from .UrlHelper import *
 from fake_useragent import UserAgent
-from flask import  redirect, url_for, request, session, current_app
+from flask import  redirect, url_for, request, session, current_app, jsonify
 from datetime import datetime
 import requests
 import os
@@ -101,3 +101,11 @@ def index():
 
     else:
         return 'hello'
+@main.route('/accesstoken/')
+def get_accesstoken:
+    mall_id = request.args.get('mall_id')
+    shop_no = request.args.get('shop_no')
+
+    m = Mall.query.filter_by(mall_id=mall_id).filter_by(shop_no=shop_no).first()
+
+    return jsonify({'accesstoken' : m.access_token })
