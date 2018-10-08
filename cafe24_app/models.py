@@ -27,7 +27,7 @@ class Scripttags(db.Model):
     __tablename__ = 'scripttags'
     idx = db.Column(db.Integer, primary_key=True)
     mall_idx = db.Column(db.ForeignKey('mall.idx'), nullable=False)
-    script_no = db.Column(db.Integer, unique=True)
+    script_no = db.Column(db.String, unique=True)
     client_id = db.Column(db.String, nullable=False)
     src = db.Column(db.String, nullable=False)
     created_date = db.Column(db.DateTime, default=None)
