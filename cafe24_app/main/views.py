@@ -101,8 +101,9 @@ def index():
 
     else:
         return 'hello'
+
 @main.route('/accesstoken/')
-def get_accesstoken:
+def get_accesstoken():
     mall_id = request.args.get('mall_id')
     shop_no = request.args.get('shop_no')
 
