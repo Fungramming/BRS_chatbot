@@ -12,9 +12,8 @@ from ..models import Scripttags
 @api.route('/tracking/')
 def get_orders():
     mall_id = request.args.get('mall_id')
-    script_no = request.args.get('script_no')
+    shop_no = request.args.get('shop_no')
     member_id = request.args.get('member_id')
-    shop_no = Scripttags.query.filter_by(mall_id=mall_id).filter_by(script_no=script_no).first().shop_no
 
     MallId, AccessToken = Confirm_access_expiration(mall_id, shop_no)
     request_url, headers = get_order_request_url(MallId, member_id, AccessToken)
