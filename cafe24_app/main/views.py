@@ -39,7 +39,7 @@ def callback():
     db.session.add(mall)
     db.session.commit()
 
-    create_src_url = current_app.config['SRC_BASE_URL'] + "/creatscripttags/?mall_id=" + mall.mall_id + "&shop_no=" + str(mall.shop_no)
+    create_src_url = current_app.config['SERVER_URL'] + "/creatscripttags/?mall_id=" + mall.mall_id + "&shop_no=" + str(mall.shop_no)
     return redirect(create_src_url)
 
 @main.route('/')
