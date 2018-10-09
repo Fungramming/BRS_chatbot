@@ -81,9 +81,9 @@ def Update_Scripttags():
 
     if st == None:
         if display_code == None:
-            create_src_url = current_app.config['SRC_BASE_URL'] + "/creatscripttags/?mall_id=" + m.mall_id + "&shop_no=" + str(m.shop_no)
+            create_src_url = current_app.config['SERVER_URL'] + "/creatscripttags/?mall_id=" + m.mall_id + "&shop_no=" + str(m.shop_no)
         else:
-            create_src_url = current_app.config['SRC_BASE_URL'] + "/creatscripttags/?mall_id=" + m.mall_id + "&shop_no=" + str(m.shop_no) +'&display_code=' + display_code
+            create_src_url = current_app.config['SERVER_URL'] + "/creatscripttags/?mall_id=" + m.mall_id + "&shop_no=" + str(m.shop_no) +'&display_code=' + display_code
         return redirect(create_src_url)
     else:
         script_no = st.script_no
@@ -95,7 +95,7 @@ def Update_Scripttags():
     result = response.json()
 
     if 'error' in result:
-        create_src_url = current_app.config['SRC_BASE_URL'] + "/creatscripttags/?mall_id=" + m.mall_id + "&shop_no=" + str(m.shop_no) +'&display_code=' + display_code
+        create_src_url = current_app.config['SERVER_URL'] + "/creatscripttags/?mall_id=" + m.mall_id + "&shop_no=" + str(m.shop_no) +'&display_code=' + display_code
         return redirect(create_src_url)
 
     scripttag = result['scripttag']
