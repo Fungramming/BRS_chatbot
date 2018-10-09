@@ -13,7 +13,7 @@ class Config:
     REQUEST_BASE_PATH = 'cafe24api.com/api/v2/admin'
     CLIENT_ID = os.environ.get('CLIENT_ID')
     CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
-    REDIRECT_URL = os.environ.get('SERVER_URL')+'callback'
+    REDIRECT_URL = os.environ.get('SERVER_URL')+'/callback'
     SRC_BASE_URL = os.environ.get('SRC_BASE_URL')
     SRC_DEFUALT_FILE = os.environ.get('SRC_DEFUALT_FILE')
     SCOPE = 'mall.write_application,mall.read_application'+\
