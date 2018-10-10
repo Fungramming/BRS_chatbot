@@ -6,7 +6,7 @@ from dateutil.relativedelta import *
 
 def orders_date_range():
 
-    start = datetime.today() - relativedelta(months=1)
+    start = datetime.today() - relativedelta(months=3) + relativedelta(days=1)
     end = datetime.today()
 
     start_date = start.strftime('%Y-%m-%d')
