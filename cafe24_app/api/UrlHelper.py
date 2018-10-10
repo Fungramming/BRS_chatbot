@@ -11,11 +11,11 @@ from fake_useragent import UserAgent
 ua = UserAgent()
 
 # 회원의 주문내역을 조회하기 위한 URL(최대 1개원 이내의 주문)
-def get_orders_request_url(MallId, member_id, AccessToken):
+def get_orders_request_url(MallId, member_id, AccessToken, orders_status_code):
     start, end = orders_date_range()
 
     request_url = 'https://' + MallId + '.' + current_app.config['REQUEST_BASE_PATH'] + \
-                  '/orders?start_date=' + start + '&end_date=' + end + '&member_id=' + member_id + '&date_type=order_date' + '&order_status=N00,N10,N20,N21,N22,N30' + '&limit=500'
+                  '/orders?start_date=' + start + '&end_date=' + end + '&member_id=' + member_id + '&date_type=order_date' + '&order_status=' + orders_status_code + '&limit=500'
     headers = {'Authorization': 'Bearer' + ' ' + AccessToken, 'Content-Type': 'application/json',
                'User-Agent': ua.random}
 
