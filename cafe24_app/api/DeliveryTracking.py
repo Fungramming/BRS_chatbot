@@ -112,9 +112,8 @@ def get_orders_delivered():
 @api.route('/user/')
 def get_member_id():
     mall_id = request.args.get('mall_id')
-    script_no = request.args.get('script_no')
+    shop_no = request.args.get('shop_no')
     cellphone = request.args.get('cellphone')
-    shop_no = Scripttags.query.filter_by(mall_id=mall_id).filter_by(script_no=script_no).first().shop_no
 
     MallId, AccessToken = Confirm_access_expiration(mall_id, shop_no)
 
