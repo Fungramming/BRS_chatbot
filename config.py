@@ -24,6 +24,7 @@ class Config:
             ',mall.read_product,mall.write_product'+\
             ',mall.read_store,mall.write_store'
     DEFAULT_DISPLAY_LOCATION_LIST = ["all"]
+    PER_PAGE = 2
     @staticmethod
     def init_app(app):
         pass
