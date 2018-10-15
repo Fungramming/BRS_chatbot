@@ -17,7 +17,6 @@ def get_AccessToken_Url(mall_id):
     scope = current_app.config['SCOPE']
     redirect_url = current_app.config['REDIRECT_URL']
     state = random_str(30, 1)
-    print(state)
 
     query = {'response_type': 'code', 'client_id': client_id, 'scope': scope,
              'redirect_uri': redirect_url, 'state': state}
