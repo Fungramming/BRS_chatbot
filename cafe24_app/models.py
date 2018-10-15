@@ -32,7 +32,7 @@ class Scripttags(db.Model):
     created_date = db.Column(db.DateTime, default=None)
     updated_date = db.Column(db.DateTime, default=None)
     JoinedLocationCode = db.Column(db.Text, default='all')
-    color = db.Column(db.String(45), default='[10,91,255]')
+    color = db.Column(db.String(45), default='rgb(10,91,255)')
     height = db.Column(db.Integer, default=80)
     transparency = db.Column(db.Integer, default=1)
 
