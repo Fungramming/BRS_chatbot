@@ -1,12 +1,11 @@
 from . import main
 from .. import db
-from ..models import Mall, Scripttags
+from ..models import Mall
 from .UrlHelper import *
 from fake_useragent import UserAgent
 from flask import  redirect, url_for, request, session, current_app, jsonify
 from datetime import datetime
 import requests
-import os
 
 ua = UserAgent()
 
