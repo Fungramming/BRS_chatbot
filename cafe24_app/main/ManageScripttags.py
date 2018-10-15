@@ -13,6 +13,9 @@ def Create_Scripttags():
     mall_id = request.args.get('mall_id')
     shop_no = request.args.get('shop_no')
     display_code = request.args.get('display_code')
+    color = request.args.get('color')
+    height = request.args.get('height')
+    transparency = request.args.get('transparency')
     src = current_app.config['SRC_BASE_URL'] + current_app.config['SRC_DEFUALT_FILE']
 
     MallId, AccessToken = Confirm_access_expiration(mall_id, shop_no)
@@ -48,13 +51,19 @@ def Create_Scripttags():
 
     scripttag = result['scripttag']
     src = current_app.config['SRC_BASE_URL'] + mall_id + '_' + scripttag['script_no'] + '.js'
+
     st = Scripttags(mall_idx=m.idx,
                     script_no=scripttag['script_no'],
                     client_id=scripttag['client_id'],
                     src=src,
                     created_date=datetime.strptime(scripttag['created_date'].split('+')[0], '%Y-%m-%dT%H:%M:%S'),
                     updated_date=datetime.strptime(scripttag['updated_date'].split('+')[0], '%Y-%m-%dT%H:%M:%S'),
+                    JoinedLocationCode=display_code,
+                    color=color,
+                    height=height,
+                    transparency=transparency
                     )
+
     db.session.add(st)
     db.session.commit()
 
@@ -83,10 +92,8 @@ def Update_Scripttags():
     st = Scripttags.query.filter_by(mall_idx=m.idx).first()
 
     if st == None:
-        if display_code == None:
-            create_src_url = current_app.config['SERVER_URL'] + "/creatscripttags/?mall_id=" + m.mall_id + "&shop_no=" + str(m.shop_no)
-        else:
-            create_src_url = current_app.config['SERVER_URL'] + "/creatscripttags/?mall_id=" + m.mall_id + "&shop_no=" + str(m.shop_no) +'&display_code=' + display_code
+        create_src_url = current_app.config['SERVER_URL'] + "/creatscripttags/?mall_id=" + m.mall_id + "&shop_no=" + str(m.shop_no) +\
+                         '&display_code=' + display_code + '&color=' + color + '&height=' + height + '&transparency=' + transparency
         return redirect(create_src_url)
     else:
         script_no = st.script_no
@@ -107,12 +114,11 @@ def Update_Scripttags():
     st.src = scripttag['src']
     st.updated_date = datetime.strptime(scripttag['updated_date'].split('+')[0], '%Y-%m-%dT%H:%M:%S')
     st.JoinedLocationCode = display_code or 'all'
-    st.color = color or '[10, 91, 255]'
-    st.height = height or 80
-    st.transparency = transparency or 1
 
     db.session.add(st)
     db.session.commit()
+
+    st = Scripttags.query.filter_by()
 
     return jsonify({'respons_messeage': 'Update Success', 'scripttag': scripttag})
 
@@ -195,13 +201,12 @@ def Get_Scripttags():
 
             scripttag = r['scripttag']
             st = Scripttags(mall_idx=m.idx,
-                            shop_no=scripttag['shop_no'],
                             script_no=scripttag['script_no'],
                             client_id=scripttag['client_id'],
                             src=scripttag['src'],
                             created_date=datetime.strptime(scripttag['created_date'].split('+')[0], '%Y-%m-%dT%H:%M:%S'),
-                            updated_date=datetime.strptime(scripttag['updated_date'].split('+')[0], '%Y-%m-%dT%H:%M:%S')
-                            )
+                            updated_date=datetime.strptime(scripttag['updated_date'].split('+')[0], '%Y-%m-%dT%H:%M:%S'),
+                            JoinedLocationCode=",".join(scripttag['display_location']))
             db.session.add(st)
             db.session.commit()
 
