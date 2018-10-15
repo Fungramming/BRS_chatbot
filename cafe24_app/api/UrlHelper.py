@@ -3,10 +3,6 @@
 from .DateHelper import orders_date_range
 from flask import current_app
 from fake_useragent import UserAgent
-# import os
-# from ..helper import random_str
-# from urllib.parse import urlencode
-# from base64 import b64encode
 
 ua = UserAgent()
 

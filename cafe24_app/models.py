@@ -5,12 +5,12 @@ from flask_login import UserMixin
 class Mall(db.Model, UserMixin):
     __tablename__ = 'mall'
     idx = db.Column(db.Integer, primary_key=True)
-    mall_id = db.Column(db.String, nullable=False)
+    mall_id = db.Column(db.String(45), nullable=False)
     shop_no = db.Column(db.Integer, default=1)
-    is_multi_shop = db.Column(db.String, default=None)
-    lang = db.Column(db.String, default='ko_KR')
-    access_token = db.Column(db.String, default=None)
-    refresh_token = db.Column(db.String, default=None)
+    is_multi_shop = db.Column(db.String(4), default=None)
+    lang = db.Column(db.String(4), default='ko_KR')
+    access_token = db.Column(db.String(200), default=None)
+    refresh_token = db.Column(db.String(200), default=None)
     expires_at = db.Column(db.DateTime, default=None)
     refresh_token_expires_at = db.Column(db.DateTime, default=None)
 
@@ -26,13 +26,13 @@ class Scripttags(db.Model):
     __tablename__ = 'scripttags'
     idx = db.Column(db.Integer, primary_key=True)
     mall_idx = db.Column(db.ForeignKey('mall.idx'), nullable=False)
-    script_no = db.Column(db.String, unique=True)
-    client_id = db.Column(db.String, nullable=False)
-    src = db.Column(db.String, nullable=False)
+    script_no = db.Column(db.String(45), unique=True)
+    client_id = db.Column(db.String(45), nullable=False)
+    src = db.Column(db.String(200), nullable=False)
     created_date = db.Column(db.DateTime, default=None)
     updated_date = db.Column(db.DateTime, default=None)
-    JoinedLocationCode = db.Column(db.String, default='all')
-    color = db.Column(db.String, default='[10,91,255]')
+    JoinedLocationCode = db.Column(db.Text, default='all')
+    color = db.Column(db.String(45), default='[10,91,255]')
     height = db.Column(db.Integer, default=80)
     transparency = db.Column(db.Integer, default=1)
 
