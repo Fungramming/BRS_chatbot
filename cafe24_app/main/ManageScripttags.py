@@ -71,7 +71,9 @@ def Create_Scripttags():
     response = requests.put(request_url, headers=headers, json=json)
     result = response.json()
 
-    result = {'to users': 'Hello', 'respons_messeage': 'Create Success', 'scripttag': result['scripttag']}
+    st = Scripttags.query.filter_by(script_no=result['scripttag']['script_no']).first()
+
+    result = {'to users': 'Hello', 'respons_messeage': 'Create Success', 'scripttag': st.to_json()}
 
     return jsonify(result)
 
@@ -95,6 +97,7 @@ def Update_Scripttags():
         create_src_url = current_app.config['SERVER_URL'] + "/creatscripttags/?mall_id=" + m.mall_id + "&shop_no=" + str(m.shop_no) +\
                          '&display_code=' + display_code + '&color=' + color + '&height=' + height + '&transparency=' + transparency
         return redirect(create_src_url)
+
     else:
         script_no = st.script_no
         src = st.src
@@ -113,14 +116,17 @@ def Update_Scripttags():
     st.script_no = scripttag['script_no']
     st.src = scripttag['src']
     st.updated_date = datetime.strptime(scripttag['updated_date'].split('+')[0], '%Y-%m-%dT%H:%M:%S')
-    st.JoinedLocationCode = display_code or 'all'
+    st.JoinedLocationCode = display_code
+    st.color = color
+    st.height = height
+    st.transparency = float(transparency)
 
     db.session.add(st)
     db.session.commit()
 
-    st = Scripttags.query.filter_by()
+    st = Scripttags.query.filter_by(mall_idx=m.idx).first()
 
-    return jsonify({'respons_messeage': 'Update Success', 'scripttag': scripttag})
+    return jsonify({'respons_messeage': 'Update Success', 'scripttag': st.to_json()})
 
 # Script tag 삭제하는 API (에러시 새로 무조건 삭제하는 방식으로 작동)
 @main.route('/deletescripttags/')
@@ -199,18 +205,20 @@ def Get_Scripttags():
             response = requests.get(request_url, headers=headers)
             r = response.json()
 
-            scripttag = r['scripttag']
             st = Scripttags(mall_idx=m.idx,
-                            script_no=scripttag['script_no'],
-                            client_id=scripttag['client_id'],
+                            script_no=r['scripttag']['script_no'],
+                            client_id=r['scripttag']['client_id'],
                             src=scripttag['src'],
-                            created_date=datetime.strptime(scripttag['created_date'].split('+')[0], '%Y-%m-%dT%H:%M:%S'),
-                            updated_date=datetime.strptime(scripttag['updated_date'].split('+')[0], '%Y-%m-%dT%H:%M:%S'),
-                            JoinedLocationCode=",".join(scripttag['display_location']))
+                            created_date=datetime.strptime(r['scripttag']['created_date'].split('+')[0], '%Y-%m-%dT%H:%M:%S'),
+                            updated_date=datetime.strptime(r['scripttag']['updated_date'].split('+')[0], '%Y-%m-%dT%H:%M:%S'),
+                            JoinedLocationCode=",".join(r['scripttag']['display_location']))
             db.session.add(st)
             db.session.commit()
 
-            result = {'respons_messeage': 'Script tag for our app', 'scripttag': r['scripttag']}
+            s = Scripttags.query.filter_by(script_no=r['scripttag']['script_no']).first()
+
+            result = {'respons_messeage': 'Script tag for our app',
+                      'scripttag': s.to_json()}
 
     else:
         script_no = scripttag.script_no
@@ -223,7 +231,10 @@ def Get_Scripttags():
             db.session.delete(scripttag)
             db.session.commit()
         else:
-            result = {'respons_messeage': 'Script tag for our app', 'scripttag': r['scripttag']}
+            s = Scripttags.query.filter_by(script_no=r['scripttag']['script_no']).first()
+
+            result = {'respons_messeage': 'Script tag for our app',
+                      'scripttag': s.to_json()}
 
     return jsonify(result)
 

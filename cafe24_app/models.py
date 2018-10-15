@@ -17,6 +17,20 @@ class Mall(db.Model, UserMixin):
     def __repr__(self):
         return '<Mall {}>'.format(self.mall_id)
 
+    def to_json(self):
+        json = {
+            'idx': self.idx,
+            'mall_id': self.mall_id,
+            'shop_no': self.shop_no,
+            'is_multi_shop': self.is_multi_shop,
+            'lang': self.lang,
+            'access_token': self.access_token,
+            'refresh_token': self.refresh_token,
+            'expires_at': self.expires_at,
+            'refresh_token_expires_at': self.refresh_token_expires_at
+        }
+        return json
+
 
 @login.user_loader
 def load_user(idx):
@@ -34,12 +48,28 @@ class Scripttags(db.Model):
     JoinedLocationCode = db.Column(db.Text, default='all')
     color = db.Column(db.String(45), default='rgb(10,91,255)')
     height = db.Column(db.Integer, default=80)
-    transparency = db.Column(db.Integer, default=1)
+    transparency = db.Column(db.Float, default=1.0)
 
     mall = db.relationship('Mall', primaryjoin='Scripttags.mall_idx == Mall.idx', backref='mall_scripttags')
 
     def __repr__(self):
         return '<Scripttags {}>'.format(self.script_no)
+
+    def to_json(self):
+        json = {
+            'idx': self.idx,
+            'mall_idx': self.mall_idx,
+            'script_no': self.script_no,
+            'client_id': self.client_id,
+            'src': self.src,
+            'created_date': self.created_date,
+            'updated_date': self.updated_date,
+            'JoinedLocationCode': self.JoinedLocationCode,
+            'color': self.color,
+            'height': self.height,
+            'transparency': self.transparency
+        }
+        return json
 
 
 login.login_message = None
