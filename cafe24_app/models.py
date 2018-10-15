@@ -1,6 +1,5 @@
 from . import db, login
 from flask_login import UserMixin
-from sqlalchemy import Enum
 
 
 class Mall(db.Model, UserMixin):
@@ -20,8 +19,8 @@ class Mall(db.Model, UserMixin):
 
 
 @login.user_loader
-def load_user(id):
-    return Mall.query.get(int(id))
+def load_user(idx):
+    return Mall.query.get(int(idx))
 
 class Scripttags(db.Model):
     __tablename__ = 'scripttags'
@@ -33,6 +32,9 @@ class Scripttags(db.Model):
     created_date = db.Column(db.DateTime, default=None)
     updated_date = db.Column(db.DateTime, default=None)
     JoinedLocationCode = db.Column(db.String, default='all')
+    color = db.Column(db.String, default='[10,91,255]')
+    height = db.Column(db.Integer, default=80)
+    transparency = db.Column(db.Integer, default=1)
 
     mall = db.relationship('Mall', primaryjoin='Scripttags.mall_idx == Mall.idx', backref='mall_scripttags')
 

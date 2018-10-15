@@ -72,6 +72,9 @@ def Update_Scripttags():
     mall_id = request.args.get('mall_id')
     shop_no = request.args.get('shop_no')
     display_code = request.args.get('display_code')
+    color = request.args.get('color')
+    height = request.args.get('height')
+    transparency = request.args.get('transparency')
     script_no = None
 
     MallId, AccessToken = Confirm_access_expiration(mall_id, shop_no)
@@ -104,6 +107,9 @@ def Update_Scripttags():
     st.src = scripttag['src']
     st.updated_date = datetime.strptime(scripttag['updated_date'].split('+')[0], '%Y-%m-%dT%H:%M:%S')
     st.JoinedLocationCode = display_code or 'all'
+    st.color = color or '[10, 91, 255]'
+    st.height = height or 80
+    st.transparency = transparency or 1
 
     db.session.add(st)
     db.session.commit()

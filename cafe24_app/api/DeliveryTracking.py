@@ -5,7 +5,6 @@ from . import api
 from cafe24_app.api.AceessTokenHelper import *
 from .UrlHelper import *
 from flask import request, jsonify, current_app, url_for
-from ..models import Scripttags
 
 
 # 회원의 3개월간 배송안된 모든 주문 상품을 조회하기위한 API
