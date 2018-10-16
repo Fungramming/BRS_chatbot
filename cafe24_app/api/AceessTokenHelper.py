@@ -19,3 +19,11 @@ def Confirm_access_expiration(mall_id, shop_no):
         MallId = m.mall_id
 
     return MallId, AccessToken
+
+def get_mallid_shopno(src_name):
+
+    m = Mall.query.filter_by(src_name=src_name).first()
+    mall_id = m.mall_id
+    shop_no = str(m.shop_no)
+
+    return mall_id, shop_no

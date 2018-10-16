@@ -10,11 +10,11 @@ from flask import request, jsonify, current_app, url_for
 # 회원의 3개월간 배송안된 모든 주문 상품을 조회하기위한 API
 @api.route('/ondelivering/')
 def get_orders_delivering():
-    mall_id = request.args.get('mall_id')
-    shop_no = request.args.get('shop_no')
+    src_name = request.args.get('src_name')
     member_id = request.args.get('member_id')
 
     # accesstoken 확인 절차 및 주문조회
+    mall_id, shop_no = get_mallid_shopno(src_name)
     MallId, AccessToken = Confirm_access_expiration(mall_id, shop_no)
     request_url, headers = get_ondelivering_orders_request_url(MallId, shop_no, member_id, AccessToken)
     response = requests.get(request_url, headers=headers)
@@ -87,13 +87,13 @@ def get_orders_delivering():
 # 회원의 3개월간 배송이 완료된 배송 상태를 조회하기 위한 API
 @api.route('/delivered/')
 def get_orders_delivered():
-    mall_id = request.args.get('mall_id')
-    shop_no = request.args.get('shop_no')
+    src_name = request.args.get('src_name')
     member_id = request.args.get('member_id')
     page = int(request.args.get('page'))
     per_page = current_app.config['PER_PAGE']
 
     # accesstoken 확인 절차 및 주문조회
+    mall_id, shop_no = get_mallid_shopno(src_name)
     MallId, AccessToken = Confirm_access_expiration(mall_id, shop_no)
     request_url, headers = get_delivered_orders_request_url(MallId, shop_no, member_id, AccessToken, page, per_page)
     response = requests.get(request_url, headers=headers)
@@ -170,10 +170,10 @@ def get_orders_delivered():
 #전화번호를 이용하여 회원의 아이디를 얻기 위한 API
 @api.route('/user/')
 def get_member_id():
-    mall_id = request.args.get('mall_id')
-    shop_no = request.args.get('shop_no')
+    src_name = request.args.get('src_name')
     cellphone = request.args.get('cellphone')
 
+    mall_id, shop_no = get_mallid_shopno(src_name)
     MallId, AccessToken = Confirm_access_expiration(mall_id, shop_no)
 
     request_url, headers = get_member_id_request_url(MallId, shop_no, cellphone, AccessToken)

@@ -63,7 +63,7 @@ class Scripttags(db.Model):
             'mall_idx': self.mall_idx,
             'script_no': self.script_no,
             'client_id': self.client_id,
-            'src': self.src,
+            'src_url': self.src_url,
             'created_date': self.created_date,
             'updated_date': self.updated_date,
             'JoinedLocationCode': self.JoinedLocationCode,

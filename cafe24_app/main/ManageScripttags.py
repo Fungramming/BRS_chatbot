@@ -8,7 +8,7 @@ from cafe24_app import db
 from datetime import datetime
 
 # Script tag 생성하는 API (양쪽 DB를 모두 리셋 후 생성하는 방식으로 작동)
-@main.route('/creatscripttags/')
+@main.route('/creatscripttags/', methods=['POST'])
 def Create_Scripttags():
     mall_id = request.args.get('mall_id')
     shop_no = request.args.get('shop_no')
@@ -50,24 +50,32 @@ def Create_Scripttags():
     result = response.json()
 
     scripttag = result['scripttag']
-    src = current_app.config['SRC_BASE_URL'] + mall_id + '_' + scripttag['script_no'] + '.js'
+    src_name = mall_id + '_' + scripttag['script_no']
+    src_url = current_app.config['SRC_BASE_URL'] + src_name + '.js'
 
     st = Scripttags(mall_idx=m.idx,
                     script_no=scripttag['script_no'],
                     client_id=scripttag['client_id'],
-                    src=src,
+                    src_url=src_url,
                     created_date=datetime.strptime(scripttag['created_date'].split('+')[0], '%Y-%m-%dT%H:%M:%S'),
                     updated_date=datetime.strptime(scripttag['updated_date'].split('+')[0], '%Y-%m-%dT%H:%M:%S'),
                     JoinedLocationCode=display_code,
                     color=color,
                     height=height,
-                    transparency=transparency
+                    transparency=transparency,
                     )
 
     db.session.add(st)
     db.session.commit()
 
-    request_url, headers, json = update_scripttags_url(MallId, AccessToken, scripttag['script_no'], shop_no, src, display_code)
+    # Mall table에 src_name 삽입
+    m = Mall.query.filter_by(mall_id=mall_id).filter_by(shop_no=shop_no).first()
+    m.src_name = src_name
+
+    db.session.add(m)
+    db.session.commit()
+
+    request_url, headers, json = update_scripttags_url(MallId, AccessToken, scripttag['script_no'], shop_no, src_url, display_code)
     response = requests.put(request_url, headers=headers, json=json)
     result = response.json()
 
@@ -78,7 +86,7 @@ def Create_Scripttags():
     return jsonify(result)
 
 # Script tag를 수정하는 API(Cafe24 서버에서 에러로 응답이 올시 생성 API로 리다이렉트 한다.)
-@main.route('/updatescripttags/')
+@main.route('/updatescripttags/', methods=['PUT'])
 def Update_Scripttags():
     mall_id = request.args.get('mall_id')
     shop_no = request.args.get('shop_no')
@@ -100,9 +108,9 @@ def Update_Scripttags():
 
     else:
         script_no = st.script_no
-        src = st.src
+        src_url = st.src_url
 
-    request_url, headers, json = update_scripttags_url(MallId, AccessToken, script_no, shop_no, src, display_code)
+    request_url, headers, json = update_scripttags_url(MallId, AccessToken, script_no, shop_no, src_url, display_code)
 
     response = requests.put(request_url, headers=headers, json=json)
     result = response.json()
@@ -114,7 +122,7 @@ def Update_Scripttags():
     scripttag = result['scripttag']
 
     st.script_no = scripttag['script_no']
-    st.src = scripttag['src']
+    st.src_url = scripttag['src']
     st.updated_date = datetime.strptime(scripttag['updated_date'].split('+')[0], '%Y-%m-%dT%H:%M:%S')
     st.JoinedLocationCode = display_code
     st.color = color
@@ -129,7 +137,7 @@ def Update_Scripttags():
     return jsonify({'respons_messeage': 'Update Success', 'scripttag': st.to_json()})
 
 # Script tag 삭제하는 API (에러시 새로 무조건 삭제하는 방식으로 작동)
-@main.route('/deletescripttags/')
+@main.route('/deletescripttags/', methods=['DELETE'])
 def Delete_Scripttags():
     mall_id = request.args.get('mall_id')
     shop_no = request.args.get('shop_no')
@@ -178,7 +186,7 @@ def Delete_Scripttags():
 
 
 # Script tag 조회하는 API (조회시 에러가 나면 Cafe24 서버의 상태로 적용한다.)
-@main.route('/getscripttags/')
+@main.route('/getscripttags/', methods=['GET'])
 def Get_Scripttags():
     mall_id = request.args.get('mall_id')
     shop_no = request.args.get('shop_no')
@@ -239,7 +247,7 @@ def Get_Scripttags():
     return jsonify(result)
 
 # 모든 Script tag를 조회하는 API
-@main.route('/getscripttagsall/')
+@main.route('/getscripttagsall/', methods=['GET'])
 def Get_Scripttags_all():
     mall_id = request.args.get('mall_id')
     shop_no = request.args.get('shop_no')

@@ -82,7 +82,7 @@ def delete_scripttags_url(MallId, AccessToken, script_no):
                'User-Agent': ua.random}
     return request_url, headers
 
-def update_scripttags_url(MallId, AccessToken, script_no, shop_no, src, display_code):
+def update_scripttags_url(MallId, AccessToken, script_no, shop_no, src_url, display_code):
     if display_code is None:
         display_location_list = current_app.config['DEFAULT_DISPLAY_LOCATION_LIST']
     else:
@@ -94,7 +94,7 @@ def update_scripttags_url(MallId, AccessToken, script_no, shop_no, src, display_
     json = {
         "shop_no": shop_no,
         "request": {
-            "src": src,
+            "src": src_url,
             "display_location": display_location_list
         }
     }
