@@ -14,7 +14,7 @@ class Config:
     CLIENT_ID = os.environ.get('CLIENT_ID')
     CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
     SERVER_URL = os.environ.get('SERVER_URL')
-    REDIRECT_URL = os.environ.get('SERVER_URL')+'/callback'
+    REDIRECT_URL = os.environ.get('SERVER_URL') + '/callback'
     SRC_BASE_URL = os.environ.get('SRC_BASE_URL')
     SRC_DEFUALT_FILE = os.environ.get('SRC_DEFUALT_FILE')
     SCOPE = 'mall.write_application,mall.read_application'+\
@@ -24,6 +24,10 @@ class Config:
             ',mall.read_product,mall.write_product'+\
             ',mall.read_store,mall.write_store'
     DEFAULT_DISPLAY_LOCATION_LIST = ["all"]
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://{username}:{password}@{host}".\
+        format(username=os.environ.get("RDS_USERNAME"), password=os.environ.get("RDS_PASSWORD"),
+               host=os.environ.get("RDS_HOSTNAME")+":"+os.environ.get("RDS_PORT")+"/"+os.environ.get("RDS_DB_NAME"))
+
     PER_PAGE = 2
     @staticmethod
     def init_app(app):
@@ -33,7 +37,7 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
     # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'chatbot_db.sqlite')
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(basedir, 'chatbot_db.sqlite')
+    # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(basedir, 'chatbot_db.sqlite')
 
 
 class ProductionConfig(Config):
@@ -43,5 +47,5 @@ class ProductionConfig(Config):
 config = {
     'development': DevelopmentConfig,
     'production': ProductionConfig,
-    'default': DevelopmentConfig
+    'default': Config
 }

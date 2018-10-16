@@ -13,6 +13,7 @@ class Mall(db.Model, UserMixin):
     refresh_token = db.Column(db.String(200), default=None)
     expires_at = db.Column(db.DateTime, default=None)
     refresh_token_expires_at = db.Column(db.DateTime, default=None)
+    src_name = db.Column(db.String(45), default=None)
 
     def __repr__(self):
         return '<Mall {}>'.format(self.mall_id)
@@ -27,7 +28,8 @@ class Mall(db.Model, UserMixin):
             'access_token': self.access_token,
             'refresh_token': self.refresh_token,
             'expires_at': self.expires_at,
-            'refresh_token_expires_at': self.refresh_token_expires_at
+            'refresh_token_expires_at': self.refresh_token_expires_at,
+            'src_name': self.src_name
         }
         return json
 
@@ -42,7 +44,7 @@ class Scripttags(db.Model):
     mall_idx = db.Column(db.ForeignKey('mall.idx'), nullable=False)
     script_no = db.Column(db.String(45), unique=True)
     client_id = db.Column(db.String(45), nullable=False)
-    src = db.Column(db.String(200), nullable=False)
+    src_url = db.Column(db.String(200), nullable=False)
     created_date = db.Column(db.DateTime, default=None)
     updated_date = db.Column(db.DateTime, default=None)
     JoinedLocationCode = db.Column(db.Text, default='all')
