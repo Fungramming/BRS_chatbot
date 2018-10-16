@@ -14,7 +14,7 @@ def get_orders_delivering():
     member_id = request.args.get('member_id')
 
     # accesstoken 확인 절차 및 주문조회
-    mall_id, shop_no = get_mallid_shopno(src_name)
+    mall_id, shop_no = get_mallid_shopno(src_name, 0)
     MallId, AccessToken = Confirm_access_expiration(mall_id, shop_no)
     request_url, headers = get_ondelivering_orders_request_url(MallId, shop_no, member_id, AccessToken)
     response = requests.get(request_url, headers=headers)
@@ -93,7 +93,8 @@ def get_orders_delivered():
     per_page = current_app.config['PER_PAGE']
 
     # accesstoken 확인 절차 및 주문조회
-    mall_id, shop_no = get_mallid_shopno(src_name)
+    mode = 0
+    mall_id, shop_no = get_mallid_shopno(src_name, 0)
     MallId, AccessToken = Confirm_access_expiration(mall_id, shop_no)
     request_url, headers = get_delivered_orders_request_url(MallId, shop_no, member_id, AccessToken, page, per_page)
     response = requests.get(request_url, headers=headers)
@@ -173,7 +174,8 @@ def get_member_id():
     src_name = request.args.get('src_name')
     cellphone = request.args.get('cellphone')
 
-    mall_id, shop_no = get_mallid_shopno(src_name)
+    mode = 0
+    mall_id, shop_no = get_mallid_shopno(src_name, 0)
     MallId, AccessToken = Confirm_access_expiration(mall_id, shop_no)
 
     request_url, headers = get_member_id_request_url(MallId, shop_no, cellphone, AccessToken)

@@ -260,3 +260,19 @@ def Get_Scripttags_all():
     result = response.json()
 
     return jsonify({'respons_messeage': 'All sript tags used by mall', 'scripttags': result['scripttags']})
+
+@main.route('/getscriptoption/', methods=['GET'])
+def Get_Script_option():
+    src_name = request.args.get('src_name')
+
+    mall_id, shop_no, mall_idx = get_mallid_shopno(src_name, 1)
+    MallId, AccessToken = Confirm_access_expiration(mall_id, shop_no)
+    sc = Scripttags.query.filter_by(mall_idx=mall_idx).first()
+    option = {'JoinedLocationCode': sc.JoinedLocationCode,
+              'color': sc.color,
+              'height': sc.height,
+              'transparency': sc.transparency
+              }
+
+
+    return jsonify({'option': option})
