@@ -36,11 +36,11 @@ def get_delivered_orders_request_url(MallId, shop_no, member_id, AccessToken, pa
 
 def get_products_request_url(MallId, shop_no, AccessToken, product_num_str):
     if product_num_str == None:
-        query = None
+        query = shop_no
     else:
-        query = '&product_no=' + product_num_str
+        query = shop_no + '&product_no=' + product_num_str
     request_url = 'https://' + MallId + '.' + current_app.config['REQUEST_BASE_PATH'] +\
-                  '/products?shop_no='+ shop_no + query
+                  '/products?shop_no=' + query
     headers = {'Authorization': 'Bearer' + ' ' + AccessToken, 'Content-Type': 'application/json',
                'User-Agent': ua.random}
 

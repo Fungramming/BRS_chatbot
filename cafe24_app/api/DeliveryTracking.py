@@ -18,6 +18,7 @@ def get_orders_delivering():
     MallId, AccessToken = Confirm_access_expiration(mall_id, shop_no)
     request_url, headers = get_ondelivering_orders_request_url(MallId, shop_no, member_id, AccessToken)
     response = requests.get(request_url, headers=headers)
+    print(response.headers)
     result = response.json()
 
     if 'error' in result:
@@ -68,6 +69,7 @@ def get_orders_delivering():
     product_str = ','.join(str(n) for n in set(product_no_list))
     request_url, headers = get_products_request_url(MallId, shop_no, AccessToken, product_str)
     response = requests.get(request_url, headers=headers)
+    print(response.headers)
     products = response.json()['products']
 
     for product in products:
@@ -93,7 +95,6 @@ def get_orders_delivered():
     per_page = current_app.config['PER_PAGE']
 
     # accesstoken 확인 절차 및 주문조회
-    mode = 0
     mall_id, shop_no = get_mallid_shopno(src_name, 0)
     MallId, AccessToken = Confirm_access_expiration(mall_id, shop_no)
     request_url, headers = get_delivered_orders_request_url(MallId, shop_no, member_id, AccessToken, page, per_page)
@@ -174,7 +175,6 @@ def get_member_id():
     src_name = request.args.get('src_name')
     cellphone = request.args.get('cellphone')
 
-    mode = 0
     mall_id, shop_no = get_mallid_shopno(src_name, 0)
     MallId, AccessToken = Confirm_access_expiration(mall_id, shop_no)
 
@@ -188,4 +188,4 @@ def get_member_id():
 # test하기 위한 API
 @api.route('/test/')
 def test():
-    return jsonify({'test': 'hello'})
+    return 'test'
