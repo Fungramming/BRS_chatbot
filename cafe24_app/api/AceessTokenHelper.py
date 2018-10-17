@@ -2,24 +2,32 @@
 import requests
 from cafe24_app.models import Mall
 from datetime import datetime
-from flask import current_app
-from cafe24_app.main.views import index
+from ..main.UrlHelper import reissue_AcessToken_Url
+from .. import db
 
 
 def Confirm_access_expiration(mall_id, shop_no):
 
-    m = Mall.query.filter_by(mall_id=mall_id).filter_by(shop_no=shop_no).first()
-    MallId = m.mall_id
-    ShopNo = str(m.shop_no)
-    IsMultiShop = m.is_multi_shop
-    AccessToken = m.access_token
-    Lang = m.lang
-    expires_accesstoken = m.expires_at
+    mall = Mall.query.filter_by(mall_id=mall_id).filter_by(shop_no=shop_no).first()
+    MallId = mall.mall_id
+    AccessToken = mall.access_token
+    RefreshToken = mall.refresh_token
+    expires_accesstoken = mall.expires_at
 
     if expires_accesstoken < datetime.now():
-        request_url = current_app.config['SERVER_URL'] + '/?mall_id='+MallId+'&shop_no='+ShopNo+'&is_multi_shop='+IsMultiShop+'&lang='+Lang
-        response = requests.get(request_url)
+        token_url, data, headers = reissue_AcessToken_Url(RefreshToken, MallId)
+        response = requests.post(token_url, data=data, headers=headers)
+        result = response.json()
 
+        mall.access_token = result.get('access_token')
+        mall.refresh_token = result.get('refresh_token')
+        mall.expires_at = datetime.strptime(result.get('expires_at'), '%Y-%m-%dT%H:%M:%S.%f')
+        mall.refresh_token_expires_at = datetime.strptime(result.get('refresh_token_expires_at'),'%Y-%m-%dT%H:%M:%S.%f')
+
+        db.session.add(mall)
+        db.session.commit()
+
+        return MallId, result.get('access_token')
     else:
         return MallId, AccessToken
 

@@ -10,7 +10,7 @@ from flask import request, jsonify, current_app, url_for
 # 회원의 3개월간 배송안된 모든 주문 상품을 조회하기위한 API
 @api.route('/ondelivering/')
 def get_orders_delivering():
-    print(request)
+    requestpath = request.full_path
     src_name = request.args.get('src_name')
     member_id = request.args.get('member_id')
 
