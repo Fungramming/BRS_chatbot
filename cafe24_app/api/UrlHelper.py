@@ -13,8 +13,11 @@ def get_ondelivering_orders_request_url(MallId, shop_no, member_id, AccessToken)
     request_url = 'https://' + MallId + '.' + current_app.config['REQUEST_BASE_PATH'] + \
                   '/orders?shop_no='+ shop_no +'&start_date=' + start + '&end_date=' + end +\
                   '&member_id=' + member_id + '&date_type=order_date' + '&order_status=N00,N10,N20,N21,N22,N30&embed=items'
-    headers = {'Authorization': 'Bearer' + ' ' + AccessToken, 'Content-Type': 'application/json',
-               'User-Agent': ua.random}
+    headers = {
+                'Authorization': 'Bearer' + ' ' + AccessToken,
+                'Content-Type': 'application/json',
+                'User-Agent': ua.random
+               }
 
     return request_url, headers
 
@@ -29,8 +32,11 @@ def get_delivered_orders_request_url(MallId, shop_no, member_id, AccessToken, pa
                   '/orders?shop_no='+ shop_no +'&start_date=' + start + '&end_date=' + end +\
                   '&member_id=' + member_id + '&date_type=order_date' + '&order_status=N40&embed=items'+\
                   '&limit=' + str(limit) + '&offset='+ str(offset)
-    headers = {'Authorization': 'Bearer' + ' ' + AccessToken, 'Content-Type': 'application/json',
-               'User-Agent': ua.random}
+    headers = {
+                'Authorization': 'Bearer' + ' ' + AccessToken,
+                'Content-Type': 'application/json',
+                'User-Agent': ua.random
+               }
 
     return request_url, headers
 
@@ -41,8 +47,11 @@ def get_products_request_url(MallId, shop_no, AccessToken, product_num_str):
         query = shop_no + '&product_no=' + product_num_str
     request_url = 'https://' + MallId + '.' + current_app.config['REQUEST_BASE_PATH'] +\
                   '/products?shop_no=' + query
-    headers = {'Authorization': 'Bearer' + ' ' + AccessToken, 'Content-Type': 'application/json',
-               'User-Agent': ua.random}
+    headers = {
+                'Authorization': 'Bearer' + ' ' + AccessToken,
+                'Content-Type': 'application/json',
+                'User-Agent': ua.random
+               }
 
     return  request_url, headers
 
@@ -50,8 +59,11 @@ def get_products_request_url(MallId, shop_no, AccessToken, product_num_str):
 def get_member_id_request_url(MallId, shop_no, cellphone, AccessToken):
     request_url = 'https://' + MallId + '.' + current_app.config['REQUEST_BASE_PATH'] + \
                   '/customers?shop_no='+shop_no+'&cellphone=' + cellphone
-    headers = {'Authorization': 'Bearer' + ' ' + AccessToken, 'Content-Type': 'application/json',
-               'User-Agent': ua.random}
+    headers = {
+                'Authorization': 'Bearer' + ' ' + AccessToken,
+                'Content-Type': 'application/json',
+                'User-Agent': ua.random
+               }
 
     return request_url, headers
 

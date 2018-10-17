@@ -127,7 +127,7 @@ def get_orders_delivered():
                          'product_no': item['product_no'],
                          'product_price': item['product_price'],
                          'quantity': item['quantity'],
-                         'option': {'option_id': item['option_id'],
+                         'z_option': {'option_id': item['option_id'],
                                     'option_price': item['option_price'],
                                     'option_value': item['option_value'],
                                     'option_value_default': item['option_value_default']
@@ -164,7 +164,7 @@ def get_orders_delivered():
     for order in orders_list:
         items = order['order_items']
         for item in items:
-            item['product_image_url'] = product_image_list[int(item['product_no'])]
+            item['z_product_image_url'] = product_image_list[int(item['product_no'])]
 
     return jsonify({'orders': orders_list, 'next_url': next_url, 'total_count': len(orders_list)})
 

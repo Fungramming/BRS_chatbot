@@ -28,7 +28,6 @@ def callback():
 
     response = requests.post(token_url, headers=headers, data=data)
     result = response.json()
-    print(result)
 
     mall = Mall.query.filter_by(mall_id=mall_id).first()
     mall.access_token = result.get('access_token')
@@ -39,7 +38,9 @@ def callback():
     db.session.add(mall)
     db.session.commit()
 
-    return 'hello'
+    redirect_url = current_app.config[''] + '/?mall_id='+mall.mall_id+'&shop_no='+mall.shop_no+'&is_multi_shop='+mall.is_multi_shop+'&lang='+mall.lang
+
+    return redirect(redirect_url)
 
 @main.route('/')
 def index():
