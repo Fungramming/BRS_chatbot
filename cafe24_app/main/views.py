@@ -38,7 +38,7 @@ def callback():
     db.session.add(mall)
     db.session.commit()
 
-    redirect_url = current_app.config[''] + '/?mall_id='+mall.mall_id+'&shop_no='+str(mall.shop_no)+'&is_multi_shop='+mall.is_multi_shop+'&lang='+mall.lang
+    redirect_url = current_app.config['SERVER_URL'] + '/?mall_id='+mall.mall_id+'&shop_no='+str(mall.shop_no)+'&is_multi_shop='+mall.is_multi_shop+'&lang='+mall.lang
 
     return redirect(redirect_url)
 
