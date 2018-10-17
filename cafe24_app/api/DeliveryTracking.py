@@ -18,7 +18,6 @@ def get_orders_delivering():
     MallId, AccessToken = Confirm_access_expiration(mall_id, shop_no)
     request_url, headers = get_ondelivering_orders_request_url(MallId, shop_no, member_id, AccessToken)
     response = requests.get(request_url, headers=headers)
-    print(response.headers)
     result = response.json()
 
     if 'error' in result:
@@ -69,7 +68,6 @@ def get_orders_delivering():
     product_str = ','.join(str(n) for n in set(product_no_list))
     request_url, headers = get_products_request_url(MallId, shop_no, AccessToken, product_str)
     response = requests.get(request_url, headers=headers)
-    print(response.headers)
     products = response.json()['products']
 
     for product in products:
