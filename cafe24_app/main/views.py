@@ -95,6 +95,7 @@ def index():
 
         db.session.add(mall)
         db.session.commit()
+        print(mall.access_token)
 
         return 'hello'
 
