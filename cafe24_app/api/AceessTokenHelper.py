@@ -20,8 +20,6 @@ def Confirm_access_expiration(mall_id, shop_no):
         request_url = current_app.config['SERVER_URL'] + '/?mall_id='+MallId+'&shop_no='+ShopNo+'&is_multi_shop='+IsMultiShop+'&lang='+Lang
         response = requests.get(request_url)
 
-        MallId, AccessToken = get_access_token(MallId, ShopNo)
-        return MallId, AccessToken
     else:
         return MallId, AccessToken
 
@@ -37,10 +35,3 @@ def get_mallid_shopno(src_name, mode):
         return mall_id, shop_no, mall_idx
     else:
         return mall_id, shop_no
-
-def get_access_token(MallId, ShopNo):
-    m = Mall.query.filter_by(mall_id=MallId).filter_by(shop_no=ShopNo).first()
-    AccessToken = m.access_token
-    MallId = m.mall_id
-
-    return MallId, AccessToken
