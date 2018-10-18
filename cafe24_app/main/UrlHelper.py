@@ -21,9 +21,9 @@ def get_AccessToken_Url(mall_id):
     query = {
              'response_type': 'code',
              'client_id': client_id,
-             'scope': scope,
+             'state': state,
              'redirect_uri': redirect_url,
-             'state': state
+             'scope': scope
              }
 
     authorization_url = authorization_base_url + '?' + urlencode(query)

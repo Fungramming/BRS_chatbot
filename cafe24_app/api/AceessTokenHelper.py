@@ -2,34 +2,37 @@
 import requests
 from cafe24_app.models import Mall
 from datetime import datetime
-from ..main.UrlHelper import reissue_AcessToken_Url
+from flask import jsonify
+from ..main.UrlHelper import reissue_AcessToken_Url, get_AccessToken_Url
 from .. import db
 
 
 def Confirm_access_expiration(mall_id, shop_no):
-
     mall = Mall.query.filter_by(mall_id=mall_id).filter_by(shop_no=shop_no).first()
-    MallId = mall.mall_id
-    AccessToken = mall.access_token
-    RefreshToken = mall.refresh_token
-    expires_accesstoken = mall.expires_at
 
-    if expires_accesstoken < datetime.now():
-        token_url, data, headers = reissue_AcessToken_Url(RefreshToken, MallId)
+    if mall.refresh_token_expires_at < datetime.now():
+        return None, None
+
+    elif mall.expires_at < datetime.now():
+
+        m = Mall.query.filter_by(mall_id=mall_id).filter_by(shop_no=shop_no).first()
+        token_url, data, headers = reissue_AcessToken_Url(m.refresh_token, mall_id)
         response = requests.post(token_url, data=data, headers=headers)
         result = response.json()
 
         mall.access_token = result.get('access_token')
         mall.refresh_token = result.get('refresh_token')
         mall.expires_at = datetime.strptime(result.get('expires_at'), '%Y-%m-%dT%H:%M:%S.%f')
-        mall.refresh_token_expires_at = datetime.strptime(result.get('refresh_token_expires_at'),'%Y-%m-%dT%H:%M:%S.%f')
+        mall.refresh_token_expires_at = datetime.strptime(result.get('refresh_token_expires_at'),
+                                                          '%Y-%m-%dT%H:%M:%S.%f')
 
         db.session.add(mall)
         db.session.commit()
 
-        return MallId, result.get('access_token')
+        return mall.mall_id, mall.access_token
     else:
-        return MallId, AccessToken
+        return mall.mall_id, mall.access_token
+
 
 
 def get_mallid_shopno(src_name, mode):

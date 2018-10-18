@@ -53,6 +53,7 @@ def index():
         return redirect(url_for('main.Uturn'))
 
     session['mall_id'] = mall_id
+
     mall = Mall.query.filter_by(mall_id=mall_id).filter_by(shop_no=shop_no).first()
 
     if mall is None:
@@ -101,12 +102,3 @@ def index():
 
     else:
         return 'hello'
-
-@main.route('/accesstoken/')
-def get_accesstoken():
-    mall_id = request.args.get('mall_id')
-    shop_no = request.args.get('shop_no')
-
-    m = Mall.query.filter_by(mall_id=mall_id).filter_by(shop_no=shop_no).first()
-
-    return jsonify({'accesstoken' : m.access_token })
