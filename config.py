@@ -6,8 +6,6 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    OAUTHLIB_INSECURE_TRANSPORT = 1
-    OAUTHLIB_RELAX_TOKEN_SCOPE = 1
     AUTHORIZATION_BASE_PATH = 'cafe24api.com/api/v2/oauth/authorize'
     TOKEN_BASE_PATH = 'cafe24api.com/api/v2/oauth/token'
     REQUEST_BASE_PATH = 'cafe24api.com/api/v2/admin'
@@ -36,12 +34,15 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'chatbot_db.sqlite')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'chatbot_db.sqlite')
     # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(basedir, 'chatbot_db.sqlite')
 
 
 class ProductionConfig(Config):
-    OAUTHLIB_INSECURE_TRANSPORT = 0
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://{username}:{password}@{host}". \
+        format(username=os.environ.get("RDS_USERNAME"), password=os.environ.get("RDS_PASSWORD"),
+               host=os.environ.get("RDS_HOSTNAME") + ":" + os.environ.get("RDS_PORT") + "/" + os.environ.get(
+                   "RDS_DB_NAME"))
 
 
 config = {
