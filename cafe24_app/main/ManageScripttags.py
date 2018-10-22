@@ -159,10 +159,10 @@ def Delete_Scripttags():
         r = response.json()
 
         if 'error' in r:
-            return jsonify(r), statushelper(response.status_code)
+            return json_response(r, status_code=response.status_code)
         else:
             result = {'respons_messeage': 'Delete Success', 'status': r['scripttag']}
-            return jsonify(result), statushelper(response.status_code)
+            return json_response(result, status_code=response.status_code)
 
     else:
         request_url, headers = get_scripttags_url(MallId, AccessToken)
@@ -240,7 +240,7 @@ def Get_Scripttags():
             result = {'respons_messeage': 'Script does not exist in remote.', 'status': r['error']}
             db.session.delete(scripttag)
             db.session.commit()
-            return jsonify(result), statushelper(response.status_code)
+            return json_response(result, status_code=response.status_code)
         else:
             s = Scripttags.query.filter_by(script_no=r['scripttag']['script_no']).first()
 
