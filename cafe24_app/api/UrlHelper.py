@@ -8,24 +8,30 @@ from urllib.parse import urlencode
 ua = UserAgent()
 
 # 회원의 배송중인 주문내역을 조회하기 위한 URL(최대 3개월 이내의 주문 전체)
-def get_ondelivering_orders_request_url(MallId, shop_no, member_id, AccessToken):
+def get_delivery_orders_request_url(MallId, shop_no, member_id, AccessToken, page, per_page):
     start, end = orders_date_range()
+
+    limit = per_page + 1
+    offset = ((page - 1) * per_page)
+
     query = {
-             'shop_no': shop_no,
-             'start_date': start,
-             'end_date': end,
-             'member_id': member_id,
-             'date_type': 'order_date',
-             'order_status': 'N00,N10,N20,N21,N22,N30',
-             'embed': 'items'
-             }
+        'shop_no': shop_no,
+        'start_date': start,
+        'end_date': end,
+        'member_id': member_id,
+        'date_type': 'order_date',
+        'order_status': 'N00,N10,N20,N21,N22,N30,N40',
+        'embed': 'items',
+        'limit': str(limit),
+        'offset': str(offset)
+    }
 
     request_url = 'https://' + MallId + '.' + current_app.config['REQUEST_BASE_PATH'] + '/orders?' + urlencode(query)
     headers = {
-                'Authorization': 'Bearer' + ' ' + AccessToken,
-                'Content-Type': 'application/json',
-                'User-Agent': ua.random
-               }
+        'Authorization': 'Bearer' + ' ' + AccessToken,
+        'Content-Type': 'application/json',
+        'User-Agent': ua.random
+    }
 
     return request_url, headers
 
@@ -37,58 +43,58 @@ def get_delivered_orders_request_url(MallId, shop_no, member_id, AccessToken, pa
     offset = ((page-1) * per_page)
 
     query = {
-             'shop_no': shop_no,
-             'start_date': start,
-             'end_date': end,
-             'member_id': member_id,
-             'date_type': 'order_date',
-             'order_status': 'N40',
-             'embed': 'items',
-             'limit': str(limit),
-             'offset': str(offset)
-             }
+        'shop_no': shop_no,
+        'start_date': start,
+        'end_date': end,
+        'member_id': member_id,
+        'date_type': 'order_date',
+        'order_status': 'N40',
+        'embed': 'items',
+        'limit': str(limit),
+        'offset': str(offset)
+    }
 
     request_url = 'https://' + MallId + '.' + current_app.config['REQUEST_BASE_PATH'] + '/orders?' + urlencode(query)
     headers = {
-                'Authorization': 'Bearer' + ' ' + AccessToken,
-                'Content-Type': 'application/json',
-                'User-Agent': ua.random
-               }
+        'Authorization': 'Bearer' + ' ' + AccessToken,
+        'Content-Type': 'application/json',
+        'User-Agent': ua.random
+    }
 
     return request_url, headers
 
 def get_products_request_url(MallId, shop_no, AccessToken, product_num_str):
     if product_num_str == None:
         query = {
-                 'shop_no': shop_no
-                }
+            'shop_no': shop_no
+        }
     else:
         query = {
-                 'shop_no': shop_no,
-                 'product_no': product_num_str,
-                 }
+            'shop_no': shop_no,
+            'product_no': product_num_str,
+        }
     request_url = 'https://' + MallId + '.' + current_app.config['REQUEST_BASE_PATH'] + '/products?'+ urlencode(query)
     headers = {
-                'Authorization': 'Bearer' + ' ' + AccessToken,
-                'Content-Type': 'application/json',
-                'User-Agent': ua.random
-               }
+        'Authorization': 'Bearer' + ' ' + AccessToken,
+        'Content-Type': 'application/json',
+        'User-Agent': ua.random
+    }
 
     return  request_url, headers
 
 # 회원의 아이디를 얻기위한 URL
 def get_member_id_request_url(MallId, shop_no, cellphone, AccessToken):
     query = {
-             'shop_no': shop_no,
-             'cellphone': cellphone
-             }
+        'shop_no': shop_no,
+        'cellphone': cellphone
+    }
 
     request_url = 'https://' + MallId + '.' + current_app.config['REQUEST_BASE_PATH'] + '/customers?'+ urlencode(query)
     headers = {
-                'Authorization': 'Bearer' + ' ' + AccessToken,
-                'Content-Type': 'application/json',
-                'User-Agent': ua.random
-               }
+        'Authorization': 'Bearer' + ' ' + AccessToken,
+        'Content-Type': 'application/json',
+        'User-Agent': ua.random
+    }
 
     return request_url, headers
 

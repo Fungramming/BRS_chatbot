@@ -6,7 +6,7 @@ from ..models import Scripttags, Mall
 from flask import request, jsonify, current_app, redirect
 from cafe24_app import db
 from datetime import datetime
-from ..api.StatusCodeHelper import statushelper
+from flask_responses import json_response
 
 # Script tag 생성하는 API (양쪽 DB를 모두 리셋 후 생성하는 방식으로 작동)
 @main.route('/creatscripttags/', methods=['POST','PUT'])
@@ -84,7 +84,7 @@ def Create_Scripttags():
 
     result = {'to users': 'Hello', 'respons_messeage': 'Create Success', 'scripttag': st.to_json()}
 
-    return jsonify(result), statushelper(response.status_code)
+    return json_response(result, status_code=response.status_code)
 
 # Script tag를 수정하는 API(Cafe24 서버에서 에러로 응답이 올시 생성 API로 리다이렉트 한다.)
 @main.route('/updatescripttags/', methods=['PUT'])
@@ -135,7 +135,7 @@ def Update_Scripttags():
 
     st = Scripttags.query.filter_by(mall_idx=m.idx).first()
 
-    return jsonify({'respons_messeage': 'Update Success', 'scripttag': st.to_json()}), statushelper(response.status_code)
+    return json_response({'respons_messeage': 'Update Success', 'scripttag': st.to_json()}, status_code=response.status_code)
 
 # Script tag 삭제하는 API (에러시 새로 무조건 삭제하는 방식으로 작동)
 @main.route('/deletescripttags/', methods=['DELETE'])
@@ -175,13 +175,13 @@ def Delete_Scripttags():
 
         if script_no == None:
             result = {'respons_messeage': 'No need to delete', 'status': 'Ok'}
-            return jsonify(result), statushelper(202)
+            return json_response(result, status_code=202)
         else:
             request_url, headers = delete_scripttags_url(MallId, AccessToken, script_no)
             response = requests.delete(request_url, headers=headers)
             r = response.json()
             result = {'respons_messeage': 'Delete Success', 'status': r['scripttag']}
-            return jsonify(result), statushelper(response.status_code)
+            return json_response(result, status_code=response.status_code)
 
 
 
@@ -209,7 +209,7 @@ def Get_Scripttags():
 
         if script_no == None:
             result = {'error': 'Script does not exist in local and remote'}
-            return jsonify(result), statushelper(404)
+            return json_response(result, status_code=404)
         else:
             request_url, headers = get_specific_scripttags_url(MallId, AccessToken, script_no)
             response = requests.get(request_url, headers=headers)
@@ -228,7 +228,7 @@ def Get_Scripttags():
             s = Scripttags.query.filter_by(script_no=r['scripttag']['script_no']).first()
 
             result = {'respons_messeage': 'Script tag for our app', 'scripttag': s.to_json()}
-            return jsonify(result), statushelper(response.status_code)
+            return json_response(result, status_code=response.status_code)
 
     else:
         script_no = scripttag.script_no
@@ -245,7 +245,7 @@ def Get_Scripttags():
             s = Scripttags.query.filter_by(script_no=r['scripttag']['script_no']).first()
 
             result = {'respons_messeage': 'Script tag for our app', 'scripttag': s.to_json()}
-            return jsonify(result), statushelper(response.status_code)
+            return json_response(result, status_code=response.status_code)
 
 # 모든 Script tag를 조회하는 API
 @main.route('/getscripttagsall/', methods=['GET'])
@@ -267,15 +267,18 @@ def Get_Script_option():
     src_name = request.args.get('src_name')
 
     mall_id, shop_no, mall_idx = get_mallid_shopno(src_name, 1)
+    if mall_id is None or shop_no is None or mall_idx is None:
+        return json_response({'error': 'mall does not exist'}, status_code=404)
+
     MallId, AccessToken = Confirm_access_expiration(mall_id, shop_no)
     sc = Scripttags.query.filter_by(mall_idx=mall_idx).first()
+
     if sc is None:
-        result = {'error': 'Script does not exist'}
-        return jsonify(result), statushelper(404)
+        return json_response({'error': 'Script does not exist'}, status_code=404)
     option = {'JoinedLocationCode': sc.JoinedLocationCode,
               'color': sc.color,
               'height': sc.height,
               'transparency': sc.transparency
               }
 
-    return jsonify({'option': option}), statushelper(200)
+    return json_response({'option': option}, status_code=200)

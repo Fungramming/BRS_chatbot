@@ -38,6 +38,11 @@ def Confirm_access_expiration(mall_id, shop_no):
 def get_mallid_shopno(src_name, mode):
     # mode에따라 출력값이 다름/ '1': mall_idx 추가로 return 한다.
     m = Mall.query.filter_by(src_name=src_name).first()
+    if m is None:
+        if mode == 1:
+            return None, None, None
+        else:
+            return None, None
     mall_id = m.mall_id
     shop_no = str(m.shop_no)
 

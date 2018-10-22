@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 from flask_migrate import Migrate, upgrade
 from cafe24_app import create_app, db
-from cafe24_app.models import Mall
+from cafe24_app.models import Mall, Scripttags
 # from cafe24_app.models import FakeCustomer, FakeOrders, FakeProduct
 
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
@@ -15,7 +15,7 @@ migrate = Migrate(app, db)
 
 @app.shell_context_processor
 def make_shell_context():
-    return dict(db=db, Mall=Mall)
+    return dict(db=db, Mall=Mall, Scripttags=Scripttags)
 
 # @app.cli.command()
 # def cleanfakedata():
@@ -32,5 +32,3 @@ def make_shell_context():
 #
 #     # migrate database to latest revision
 #     upgrade()
-#
-#
