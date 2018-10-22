@@ -2,8 +2,7 @@
 import requests
 from cafe24_app.models import Mall
 from datetime import datetime
-from flask import jsonify
-from ..main.UrlHelper import reissue_AcessToken_Url, get_AccessToken_Url
+from ..main.UrlHelper import reissue_AcessToken_Url
 from .. import db
 
 

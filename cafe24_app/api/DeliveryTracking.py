@@ -4,7 +4,7 @@ import requests
 from . import api
 from cafe24_app.api.AceessTokenHelper import *
 from .UrlHelper import *
-from flask import request, jsonify, current_app, url_for
+from flask import request, current_app, url_for
 from flask_responses import json_response
 
 # 회원의 3개월간 배송안된 모든 주문 상품을 조회하기위한 API
@@ -21,7 +21,7 @@ def get_orders_delivering():
     MallId, AccessToken = Confirm_access_expiration(mall_id, shop_no)
 
     if MallId is None and AccessToken is None:
-        return jsonify({'error':'refresh_token이 만료되었습니다. 관리자에게 문의하세요', 'error_code': '401', 'error_message': 'UNAUTHORIZED'}), statushelper(401)
+        return json_response({'error':'refresh_token이 만료되었습니다. 관리자에게 문의하세요', 'error_code': '401', 'error_message': 'UNAUTHORIZED'}, status_code=401)
 
     request_url, headers = get_delivery_orders_request_url(MallId, shop_no, member_id, AccessToken, page, per_page)
     response = requests.get(request_url, headers=headers)
@@ -202,4 +202,4 @@ def get_member_id():
 # test하기 위한 API
 @api.route('/test/')
 def test():
-    return jsonify({'test':'test'})
+    return json_response({'test':'test'})

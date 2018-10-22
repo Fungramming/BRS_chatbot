@@ -3,7 +3,7 @@ from .. import db
 from ..models import Mall
 from .UrlHelper import *
 from fake_useragent import UserAgent
-from flask import  redirect, url_for, request, session, current_app, jsonify
+from flask import  redirect, url_for, request, session, current_app
 from datetime import datetime
 import requests
 

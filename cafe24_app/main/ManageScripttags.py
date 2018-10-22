@@ -3,7 +3,7 @@ from . import main
 from ..api.AceessTokenHelper import *
 from .UrlHelper import post_scripttags_url, get_specific_scripttags_url, delete_scripttags_url, get_scripttags_url, update_scripttags_url
 from ..models import Scripttags, Mall
-from flask import request, jsonify, current_app, redirect
+from flask import request, current_app, redirect
 from cafe24_app import db
 from datetime import datetime
 from flask_responses import json_response
@@ -260,7 +260,7 @@ def Get_Scripttags_all():
     response = requests.get(request_url, headers=headers)
     result = response.json()
 
-    return jsonify({'respons_messeage': 'All sript tags used by mall', 'scripttags': result['scripttags']}), statushelper(response.status_code)
+    return json_response({'respons_messeage': 'All sript tags used by mall', 'scripttags': result['scripttags']}, status_code=response.status_code)
 
 @main.route('/getscriptoption/', methods=['GET'])
 def Get_Script_option():
